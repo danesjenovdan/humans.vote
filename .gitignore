@@ -1,0 +1,8 @@
+# compiled contracts
+/bin
+
+# actual chain data
+/eth-data
+
+# bootnode key
+boot.key
