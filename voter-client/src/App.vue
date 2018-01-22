@@ -12,10 +12,10 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       title: 'Humans Vote',
-    }
-  }
-}
+    };
+  },
+};
 </script>
