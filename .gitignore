@@ -6,3 +6,6 @@
 
 # bootnode key
 boot.key
+
+# wallet
+wallet.address
