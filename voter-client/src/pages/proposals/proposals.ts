@@ -19,6 +19,7 @@ export class ProposalsPage implements OnInit {
   etherValue: string = '0.0';
   recipientAddress: string;
   addressBalance: string;
+  sending: boolean = false;
 
   constructor(
     private walletUtils: WalletUtilsProvider
@@ -40,7 +41,7 @@ export class ProposalsPage implements OnInit {
    */
   async checkAddressBalanceTap() {
 
-    if (!this.walletUtils.validateAddress(this.balanceCheckAddress)) return alert('Invalid ethereum contractAddress');
+    if (!this.walletUtils.validateAddress(this.balanceCheckAddress)) return alert('Invalid ethereum address');
 
     try {
       this.addressBalance = await this.walletUtils.checkAddressBalance(this.balanceCheckAddress);
@@ -71,11 +72,13 @@ export class ProposalsPage implements OnInit {
    */
   async sendEthTap() {
 
-    if (!this.walletUtils.validateAddress(this.recipientAddress)) return alert('Invalid ethereum contractAddress');
+    if (!this.walletUtils.validateAddress(this.recipientAddress)) return alert('Invalid ethereum address');
     try {
 
       console.log('this.etherValue: ', this.etherValue);
       console.log('this.recipientAddress: ', this.recipientAddress);
+
+      this.sending = true;
 
       const transactionResult = await this.walletUtils.sendTransaction({
         gasLimit: 1000000,
@@ -84,7 +87,10 @@ export class ProposalsPage implements OnInit {
         value: utils.parseEther(this.etherValue)
       });
 
-      console.log('transactionResult: ', transactionResult);
+      // Get notified when a transaction is mined
+      this.provider.once(transactionResult.hash, (transaction) => {
+        this.sending = false;
+      });
 
       return transactionResult;
 
