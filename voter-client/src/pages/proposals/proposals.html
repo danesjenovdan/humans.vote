@@ -1,0 +1,27 @@
+<ion-content padding>
+    <div style="text-align: center;">
+        <h2>Welcome to human's vote</h2>
+
+        <ion-label color="primary">Your ethereum address</ion-label>
+        <ion-input placeholder="0xAddress" [ngModel]="address"></ion-input>
+        <button (click)="checkMyBalanceTap()" ion-button block>Check your balance</button>
+        <div style="text-align: center;">
+            <p>Your balance</p>
+            <h3>{{balance}}</h3>
+        </div>
+        <hr/>
+        <h3>Send ethers</h3>
+        <ion-label color="primary">How many ethers do you want to send</ion-label>
+        <ion-input placeholder="0.0" [(ngModel)]="ethers"></ion-input>
+        <ion-label color="primary">Address to send to</ion-label>
+        <ion-input placeholder="0xAddress" [(ngModel)]="recipientAddress"></ion-input>
+        <button (click)="sendEthTap()" ion-button block>Send {{ethers}} eth</button>
+        <hr/>
+        <h3>Check address balance</h3>
+        <ion-label color="primary">Enter ethereum address</ion-label>
+        <ion-input placeholder="0xAddress" [(ngModel)]="balanceCheckAddress"></ion-input>
+        <button (click)="checkAddressBalanceTap()" ion-button block>Check address balance</button>
+        <p>Address balance</p>
+        <h3>{{addressBalance}}</h3>
+    </div>
+</ion-content>

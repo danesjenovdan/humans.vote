@@ -1,0 +1,6 @@
+<ion-content padding>
+  <h1>Device setup</h1>
+  <ion-label color="primary">Enter node url</ion-label>
+  <ion-input placeholder="http://localhost:3040" [(ngModel)]="rpcUrl"></ion-input>
+  <button (click)="setupTap()" ion-button block>Setup</button>
+</ion-content>

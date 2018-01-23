@@ -1,0 +1,5 @@
+<ion-content padding>
+    <ion-label color="primary">Enter node url</ion-label>
+    <ion-input placeholder="http://localhost:8545" [(ngModel)]="rpcUrl"></ion-input>
+    <button (click)="saveRPCUrlTap()" ion-button block>{{saving?'Setting':'Set RPC url'}}</button>
+</ion-content>

@@ -1,18 +1,31 @@
-# web-client
+## Humans vote mobile client in Ionic
 
-> humans.vote web client
+#### Overview
 
-## Build Setup
+Application starts with the `Tabs` component. There's a `ionViewCanEnter` method in `TabsPage` component that checks if the necessary initialization has been complete. If not it presents a modal with setup fields.
 
-``` bash
-# install dependencies
-npm install
+A private key is generated on first launch and the wallet address is displayed at the moment in the `ProposalsPage` component. 
 
-# serve with hot reload at localhost:8080
-npm run dev
+#### Installation
 
-# build for production with minification
-npm run build
-```
+`$ npm i`
 
-For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
+#### Development
+
+`$ ionic serve`
+
+#### Deployment
+
+Add platforms first.
+
+**Android**
+
+`$ ionic cordova platform add android`
+
+**iOS**
+
+`$ ionic cordova platform add ios`
+
+**Building**
+
+`$ ionic cordova run android`
