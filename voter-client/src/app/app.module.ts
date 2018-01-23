@@ -17,11 +17,9 @@ import { ProfilePage } from '../pages/profile/profile';
 import { ProposalsPage } from '../pages/proposals/proposals';
 import { ComponentsModule } from '../components/components.module';
 import { HttpProvider } from '../providers/http/http';
-<<<<<<< HEAD
-import { ContractsPage } from '../pages/contracts/contracts';
+import { ContractsPage, ContractFormPage } from '../pages/contracts/contracts';
 import { Toast } from '@ionic-native/toast';
 import { Clipboard } from '@ionic-native/clipboard';
-import { ContractsPage, ContractFormPage } from '../pages/contracts/contracts';
 
 @NgModule({
   declarations: [

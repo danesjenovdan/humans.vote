@@ -1,6 +1,6 @@
 import { includes, startCase } from 'lodash';
 import { Component, OnInit } from '@angular/core';
-import { IonicPage, ModalController, NavController, NavParams, ViewController } from 'ionic-angular';
+import { ModalController, NavController, NavParams, ViewController } from 'ionic-angular';
 import { HttpProvider } from '../../providers/http/http';
 import { ConfigProvider } from '../../providers/config/config';
 import { TRANSACTION_STATUS, WalletUtilsProvider } from '../../providers/wallet-utils/wallet-utils';
@@ -163,7 +163,7 @@ export class ContractsPage implements OnInit {
 })
 export class ContractFormPage {
   contractName: string;
-  fields: Array<Object>;
+  fields: Array<any>;
 
   constructor(
     public params: NavParams,
