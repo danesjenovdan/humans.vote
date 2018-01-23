@@ -225,7 +225,7 @@ contract PrivateOrganisation is Owned {
      * @param proposalNumber proposal number
      * 
      */
-    function getProposalResults(uint proposalNumber) public {
+    function getProposalResults(uint proposalNumber) public returns (bool proposalPassed) {
         Proposal storage p = proposals[proposalNumber]; // get proposal
 
         require(now > p.votingDeadline // If it is past the voting deadline
@@ -242,6 +242,7 @@ contract PrivateOrganisation is Owned {
 
         // Fire Events
         ProposalTallied(proposalNumber, p.currentResult, p.numberOfVotes, p.proposalPassed);
+        return p.proposalPassed;
     }
 }
 
