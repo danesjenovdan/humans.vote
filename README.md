@@ -6,5 +6,7 @@ Blockchain voting for humans
 
 ## Setup bootstrap node
 ```git clone https://github.com/danesjenovdan/humans.vote.git```
+
 ```cd humans.vote```
-```sudo sh setup.sh <domain/ip-address>```
+
+```sudo sh setup.sh <domain/your public ip>```

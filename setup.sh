@@ -43,6 +43,6 @@ account_address=$(echo $account_address | cut -d'{' -f 2| cut -d'}' -f 1)
 
 echo 0x$account_address > wallet.address
 
-run_geth=$(geth --datadir=eth-data --bootnodes=$enode --mine --minerthreads=1 --rpc --rpccorsdomain "http://localhost:8683" --etherbase=0x$account_address console)
+run_geth=$(geth --datadir=eth-data --bootnodes=$enode --mine --minerthreads=1 --rpc --rpccorsdomain "*" --rpcaddr $1 --rpcport 8683 --etherbase=0x$account_address console)
 $run_geth 
 
