@@ -1,14 +1,26 @@
 #! /bin/sh
-if [ $# -eq 0 ]
+
+while getopts i:a:b: option
+do
+	case "${option}"
+	in
+	i) IP=${OPTARG};;
+	a) ADDRESS=${OPTARG};;
+	b) BOOTSTRAP=${OPTARG};;
+	esac
+done
+echo $IP
+echo $ADDRESS
+echo $BOOTSTRAP
+
+
+# Check for ip
+if [ ! $IP  ]
   then
     echo "first argument must be server domain/IP"
     exit 1
 fi
 
-#wallet password input 
-stty -echo
-read -p "Wallet password: " password; echo
-stty echo
 
 #install packages
 apt-get install software-properties-common -y
@@ -19,32 +31,49 @@ apt-get install solc -y
 apt-get install nginx -y
 
 
-#generate random chainId and nonce
-chainId=$(shuf -i 1-10000 -n 1)
-echo $chainId
-nonce=$(openssl rand -hex 6)
+# run bootstrap node
+if [ $BOOTSTRAP  ]
+  then
+  	#generate random chainId and nonce
+  	echo "set Bootstrap node"
+	chainId=$(shuf -i 1-10000 -n 1)
+	echo $chainId
+	nonce=$(openssl rand -hex 6)
 
-sed -i 's/XXXX/'$chainId'/g' genesis.json
-sed -i 's/ZZZZ/'$nonce'/g' genesis.json
+	sed -i 's/XXXX/'$chainId'/g' genesis.json
+	sed -i 's/ZZZZ/'$nonce'/g' genesis.json
 
-# setup bootnode and geth
+    bootnode --genkey=boot.key
+	key=$(bootnode --nodekey=boot.key -writeaddress)
+	enode=enode://$key@$IP:30301
+	echo $enode > /var/www/html/index.nginx-debian.html
+	run_node="bootnode --nodekey=boot.key &"
+	$run_node > /dev/null 2>&1  &
+  else
+  	echo "read enode from bootnode"
+  	echo 'wget '$IP' -q -O -'
+  	enode=$(wget $IP/ -q -O -)
+  	echo $enode
+fi
+echo $enode
+# set or create wallet address
+if [ $ADDRESS  ]
+  then
+    echo "Use your wallet"
+    account_address=$ADDRESS
+  else
+  	echo "Generiraj wallet"
+  	#wallet password input 
+	stty -echo
+	read -p "Wallet password: " password; echo
+	stty echo
+	echo $password > cache.tmp
+	account_address=$(geth --datadir=eth-data account new --password cache.tmp)
+	rm cache.tmp
+	account_address=0x$(echo $account_address | cut -d'{' -f 2| cut -d'}' -f 1)
+	echo $account_address > wallet.address
+	echo 'your wallet addres is in wallet.address'
+fi
+
 geth init genesis.json --datadir eth-data
-bootnode --genkey=boot.key
-key=$(bootnode --nodekey=boot.key -writeaddress)
-enode=enode://$key@$1:30301
-echo $enode > /var/www/html/index.nginx-debian.html
-echo $password > cache.tmp
-account_address=$(geth account new --password cache.tmp)
-rm cache.tmp
-run_node="bootnode --nodekey=boot.key &"
-$run_node > /dev/null 2>&1  &
-
-account_address=$(echo $account_address | cut -d'{' -f 2| cut -d'}' -f 1)
-
-cp -r ~/.ethereum/keystore ./eth-data
-
-echo 0x$account_address > wallet.address
-
-run_geth=$(geth --datadir=eth-data --bootnodes=$enode --mine --minerthreads=1 --rpc --rpccorsdomain "*" --rpcaddr 127.0.0.1 --rpcport 7001 --etherbase=0x$account_address)
-$run_geth 
-
+geth --datadir=eth-data --bootnodes=$enode --mine --minerthreads=1 --rpc --rpccorsdomain "*" --rpcaddr 127.0.0.1 --rpcport 8683 --etherbase=$account_address console
