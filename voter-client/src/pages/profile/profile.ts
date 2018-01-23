@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
 import { ConfigProvider } from '../../providers/config/config';
 import { WalletUtilsProvider } from '../../providers/wallet-utils/wallet-utils';
 import { StorageProvider } from '../../providers/storage/storage';
+import { Toast } from '@ionic-native/toast';
+import { Clipboard } from '@ionic-native/clipboard';
 
 @Component({
   selector: 'page-profile',
@@ -12,19 +14,40 @@ export class ProfilePage implements OnInit {
 
   rpcUrl: string;
   saving: boolean = false;
+  address: string;
+  balance: string = '0.0';
 
   constructor(
     private navCtrl: NavController,
     private navParams: NavParams,
     private storage: StorageProvider,
     private walletUtils: WalletUtilsProvider,
-    private config: ConfigProvider
+    private config: ConfigProvider,
+    private clipboard: Clipboard,
+    private toast: Toast,
+    private platform: Platform
   ) {
   }
 
   async ngOnInit() {
 
+    this.address = this.walletUtils.walletAddress;
     this.rpcUrl = await this.storage.getRPCUrl();
+    this.balance = await this.walletUtils.checkMyWalletBalance();
+
+  }
+
+  /**
+   * [TAP] Check balance on my wallet
+   * @returns {Promise<void>}
+   */
+  async checkMyBalanceTap() {
+
+    try {
+      this.balance = await this.walletUtils.checkMyWalletBalance();
+    } catch (err) {
+      alert('Trouble accessing RPC');
+    }
 
   }
 
@@ -41,6 +64,20 @@ export class ProfilePage implements OnInit {
     await this.walletUtils.initWallet();
 
     this.saving = false;
+
+  }
+
+  onAddressTap(){
+
+    this.clipboard.copy(this.address);
+
+    if(this.platform.is('mobile')) {
+      this.toast.show(`Wallet address copied to clipboard`, '3000', 'bottom').subscribe(
+        toast => {
+          console.log(toast);
+        }
+      );
+    }
 
   }
 

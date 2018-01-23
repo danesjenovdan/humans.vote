@@ -18,6 +18,8 @@ import { ProposalsPage } from '../pages/proposals/proposals';
 import { ComponentsModule } from '../components/components.module';
 import { HttpProvider } from '../providers/http/http';
 import { ContractsPage } from '../pages/contracts/contracts';
+import { Toast } from '@ionic-native/toast';
+import { Clipboard } from '@ionic-native/clipboard';
 
 @NgModule({
   declarations: [
@@ -65,7 +67,9 @@ import { ContractsPage } from '../pages/contracts/contracts';
     StorageProvider,
     ConfigProvider,
     WalletUtilsProvider,
-    HttpProvider
+    HttpProvider,
+    Toast,
+    Clipboard
   ]
 })
 export class AppModule {}

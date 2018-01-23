@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 
@@ -12,6 +11,7 @@ import { Storage } from '@ionic/storage';
 export class ConfigProvider {
 
   contractsUrl = 'https://raw.githubusercontent.com/danesjenovdan/humans.vote/master/bin/contracts/';
+  port: number = 8683;
 
   provider = {
     url: 'http://localhost:8545',

@@ -1,5 +1,18 @@
 <ion-content padding>
-    <ion-label color="primary">Enter node url</ion-label>
+    <h3>Your wallet</h3>
+    <p class="label-ios-primary"><b>Tap on the wallet address to copy it to your clipboard</b><br/> and
+        share it with your voting admin</p>
+    <div class="intro-wallet-address" (click)="onAddressTap()">{{address}}</div>
+    <hr/>
+    <h3>Check balance</h3>
+    <div style="width: 100%; overflow: auto;">
+        <button (click)="checkMyBalanceTap()" ion-button>Check your balance</button>
+        <div style="padding:10px;">
+            <h2 style="font-weight: 200">{{balance}} ETH</h2>
+        </div>
+    </div>
+    <hr/>
+    <h3>Edit RPC node URL</h3>
     <ion-input placeholder="http://localhost:8545" [(ngModel)]="rpcUrl"></ion-input>
     <button (click)="saveRPCUrlTap()" ion-button block>{{saving?'Setting':'Set RPC url'}}</button>
 </ion-content>
