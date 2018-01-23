@@ -1,5 +1,6 @@
 pragma solidity ^0.4.18;
 
+
 // Owned contracts are owned by a single address, and owner has rights issued through onlyOwner modifier
 contract Owned {
     address public owner;

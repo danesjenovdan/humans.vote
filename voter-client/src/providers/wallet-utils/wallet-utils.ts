@@ -88,12 +88,12 @@ export class WalletUtilsProvider {
    * @param {string} name
    * @returns {Promise<any>}
    */
-  async deployContract(abi: string, bin: string, name: string) {
+  async deployContract(abi: string, bin: string, args: Array<any>) {
 
     try {
 
       // Notice we pass in "Hello World" as the parameter to the constructor
-      const deployTransaction = Contract.getDeployTransaction(bin, abi, "Hello World");
+      const deployTransaction = Contract.getDeployTransaction(bin, abi, ...args);
       // Send the transaction
       const contractResponse = await this.wallet.sendTransaction(deployTransaction);
 

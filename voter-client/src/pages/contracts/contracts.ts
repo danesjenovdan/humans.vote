@@ -102,7 +102,7 @@ export class ContractsPage implements OnInit {
     const abiResponse = await this.httpProvider.get(abiUrl);
     const binResponse = '0x' + await this.httpProvider.get(binUrl);
 
-    await this.walletUtils.deployContract(abiResponse, binResponse, contract.name)
+    await this.walletUtils.deployContract(abiResponse, binResponse, [1, 2, 1])
       .catch((err) => {
         console.log(err);
         alert('There was a problem when deploying this contract');
