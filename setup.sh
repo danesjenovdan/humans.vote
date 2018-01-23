@@ -30,6 +30,26 @@ apt-get install solc -y
 apt-get install nginx -y
 apt-get install qrencode -y
 
+# set or create wallet address
+if [ $ADDRESS  ]
+  then
+    echo "Use your wallet"
+    account_address=$ADDRESS
+  else
+  	echo "Generiraj wallet"
+  	#wallet password input
+	stty -echo
+	read -p "Wallet password: " password; echo
+	stty echo
+	echo $password > cache.tmp
+	account_address=$(geth --datadir=eth-data account new --password cache.tmp)
+	rm cache.tmp
+	account_address=0x$(echo $account_address | cut -d'{' -f 2| cut -d'}' -f 1)
+	echo $account_address > wallet.address
+	$ADDRESS=$account_address
+	echo 'your wallet addres is in wallet.address'
+fi
+
 # run bootstrap node
 if [ $BOOTSTRAP ] && [ $ADDRESS ]
   then
@@ -60,24 +80,6 @@ if [ $BOOTSTRAP ] && [ $ADDRESS ]
   	echo $enode
 fi
 echo $enode
-# set or create wallet address
-if [ $ADDRESS  ]
-  then
-    echo "Use your wallet"
-    account_address=$ADDRESS
-  else
-  	echo "Generiraj wallet"
-  	#wallet password input
-	stty -echo
-	read -p "Wallet password: " password; echo
-	stty echo
-	echo $password > cache.tmp
-	account_address=$(geth --datadir=eth-data account new --password cache.tmp)
-	rm cache.tmp
-	account_address=0x$(echo $account_address | cut -d'{' -f 2| cut -d'}' -f 1)
-	echo $account_address > wallet.address
-	echo 'your wallet addres is in wallet.address'
-fi
 
 geth init genesis.json --datadir eth-data
 geth --datadir=eth-data --bootnodes=$enode --mine --minerthreads=1 --rpc --rpccorsdomain "*" --rpcaddr 127.0.0.1 --rpcport 8683 --etherbase=$account_address console
