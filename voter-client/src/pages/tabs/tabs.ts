@@ -13,10 +13,6 @@ import { ContractsPage } from '../contracts/contracts';
 })
 export class TabsPage {
 
-  wallet;
-  provider;
-  address;
-
   tab1Root = ProposalsPage;
   tab2Root = ContractsPage;
   tab3Root = ProfilePage;
@@ -50,7 +46,6 @@ export class TabsPage {
       profileModal.present();
 
     });
-
 
   }
 
