@@ -9,4 +9,4 @@ Blockchain voting for humans
 
 ```cd humans.vote```
 
-```sudo sh setup.sh <domain/your public ip>```
+```sudo sh setup.sh -i <domain/your public ip> -a <wallet account [optional]> -b True[optional if runing bootnode]```
