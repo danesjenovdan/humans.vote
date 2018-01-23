@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
+
 /*
   Generated class for the StorageProvider provider.
 
@@ -24,7 +25,7 @@ export class StorageProvider {
    * Set RPC url
    * @param url
    */
-  setRPCUrl(url){
+  setRPCUrl(url) {
     return this.storage.set('rpcUrl', url);
   }
 
@@ -32,7 +33,7 @@ export class StorageProvider {
    * Get RPC url
    * @param url
    */
-  getRPCUrl(){
+  getRPCUrl() {
     return this.storage.get('rpcUrl');
   }
 
@@ -43,5 +44,35 @@ export class StorageProvider {
   getPrivateKey(): Promise<any> {
     return this.storage.get('privateKey');
   }
+
+  async getDeployedContracts(): Promise<Array<IContract>> {
+
+    return await this.storage.get('contracts') as IContract[];
+
+  }
+
+  async addDeployedContract(contract: IContract) {
+
+    let contracts = await this.storage.get('contracts');
+
+    if (!contracts) contracts = [];
+
+    contracts.push(contract);
+
+    return this.storage.set('contracts', contracts);
+
+  }
+
+  removeDeployedContract() {
+
+  }
+
+}
+
+export interface IContract {
+
+  name: string;
+  abi: string;
+  hash: string;
 
 }

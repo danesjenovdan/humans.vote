@@ -16,13 +16,16 @@ import { WalletUtilsProvider } from '../providers/wallet-utils/wallet-utils';
 import { ProfilePage } from '../pages/profile/profile';
 import { ProposalsPage } from '../pages/proposals/proposals';
 import { ComponentsModule } from '../components/components.module';
+import { HttpProvider } from '../providers/http/http';
+import { ContractsPage } from '../pages/contracts/contracts';
 
 @NgModule({
   declarations: [
     MyApp,
     ProfilePage,
     ProposalsPage,
-    TabsPage
+    TabsPage,
+    ContractsPage
   ],
   imports: [
     BrowserModule,
@@ -51,6 +54,7 @@ import { ComponentsModule } from '../components/components.module';
     ProfilePage,
     ProposalsPage,
     TabsPage,
+    ContractsPage
   ],
   providers: [
     StatusBar,
@@ -60,7 +64,8 @@ import { ComponentsModule } from '../components/components.module';
     KeyUtilsProvider,
     StorageProvider,
     ConfigProvider,
-    WalletUtilsProvider
+    WalletUtilsProvider,
+    HttpProvider
   ]
 })
 export class AppModule {}

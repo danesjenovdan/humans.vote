@@ -1,6 +1,6 @@
 <ion-content padding>
     <div style="text-align: center;">
-        <h2>Welcome to human's vote</h2>
+        <h2>Welcome to humans vote</h2>
 
         <ion-label color="primary">Your ethereum address</ion-label>
         <ion-input placeholder="0xAddress" [ngModel]="address"></ion-input>
@@ -12,10 +12,10 @@
         <hr/>
         <h3>Send ethers</h3>
         <ion-label color="primary">How many ethers do you want to send</ion-label>
-        <ion-input placeholder="0.0" [(ngModel)]="ethers"></ion-input>
+        <ion-input placeholder="0.0" [(ngModel)]="etherValue"></ion-input>
         <ion-label color="primary">Address to send to</ion-label>
         <ion-input placeholder="0xAddress" [(ngModel)]="recipientAddress"></ion-input>
-        <button (click)="sendEthTap()" ion-button block>Send {{ethers}} eth</button>
+        <button (click)="sendEthTap()" ion-button block>Send {{etherValue}} eth</button>
         <hr/>
         <h3>Check address balance</h3>
         <ion-label color="primary">Enter ethereum address</ion-label>

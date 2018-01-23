@@ -6,6 +6,8 @@ import { KeyUtilsProvider } from '../key-utils/key-utils';
 import * as ethereum_address from 'ethereum-address';
 import isURL from 'validator/lib/isURL';
 
+const Contract = ethers.Contract;
+
 /*
   Generated class for the WalletUtilsProvider provider.
 
@@ -76,7 +78,52 @@ export class WalletUtilsProvider {
    * @returns {Promise<any>}
    */
   sendTransaction(transaction: ITransaction) {
-    return this.wallet.getTransactionCount();
+    return this.wallet.sendTransaction(transaction);
+  }
+
+  /**
+   * Deploy contract
+   * @param {string} abi
+   * @param {string} bin
+   * @param {string} name
+   * @returns {Promise<any>}
+   */
+  async deployContract(abi: string, bin: string, name: string) {
+
+    // Notice we pass in "Hello World" as the parameter to the constructor
+    try {
+      const deployTransaction = Contract.getDeployTransaction(bin, abi, "Hello World");
+      // Send the transaction
+      const contractResponse = await this.wallet.sendTransaction(deployTransaction);
+      await this.storage.addDeployedContract({
+        hash: contractResponse.hash,
+        abi,
+        name
+      });
+      console.log(contractResponse);
+      return contractResponse;
+    } catch (err) {
+      return Promise.reject(err);
+    }
+
+  }
+
+  async connectToContract(address, abi){
+
+    try {
+
+      const contract = new ethers.Contract(address, abi, this.provider);
+
+      console.log(contract);
+
+      const result = await contract.greet();
+
+      console.log(result);
+
+    }catch(err){
+      console.log(err);
+    }
+
   }
 
   /**
@@ -93,7 +140,7 @@ export class WalletUtilsProvider {
    * @param {string} url
    */
   validateUrl(url: string) {
-    return isURL(url, {require_tld:false});
+    return isURL(url, { require_tld: false });
   }
 
 }
@@ -105,6 +152,6 @@ export interface ITransaction {
   gasPrice: number;
   to: string;
   value: number;
-  chainId: number;
+  chainId?: number;
 
 }

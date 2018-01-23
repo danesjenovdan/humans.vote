@@ -16,7 +16,7 @@ export class ProposalsPage implements OnInit {
   address;
   balanceCheckAddress;
   balance: string = '0.0';
-  ethers: string = '0.0';
+  etherValue: string = '0.0';
   recipientAddress: string;
   addressBalance: string;
 
@@ -61,17 +61,24 @@ export class ProposalsPage implements OnInit {
 
     if (!this.walletUtils.validateAddress(this.recipientAddress)) return alert('Invalid ethereum address');
     try {
+
+      console.log('this.etherValue: ', this.etherValue);
+      console.log('this.recipientAddress: ', this.recipientAddress);
+
       const transactionResult = await this.walletUtils.sendTransaction({
-        //nonce: 1,
-        gasLimit: 21000,
+        gasLimit: 1000000,
         gasPrice: utils.bigNumberify('20000000000'),
         to: this.recipientAddress,
-        value: utils.parseEther('1.0'),
-        chainId: 9999
+        value: utils.parseEther(this.etherValue)
       });
-      console.log(transactionResult);
+
+      console.log('transactionResult: ', transactionResult);
+
+      return transactionResult;
+
     } catch (err) {
-      alert('Trouble accessing RPC');
+      console.log(err);
+      alert('Trouble accessing RPC: ');
     }
 
   }

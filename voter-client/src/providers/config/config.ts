@@ -11,9 +11,11 @@ import { Storage } from '@ionic/storage';
 @Injectable()
 export class ConfigProvider {
 
+  contractsUrl = 'https://raw.githubusercontent.com/danesjenovdan/humans.vote/master/bin/contracts/';
+  //https://raw.githubusercontent.com/danesjenovdan/humans.vote/master/bin/contracts/Greeter/greeter.abi
   provider = {
     url: 'http://localhost:8545',
-    chainId: 9999,
+    chainId: 2114,
     name: 'humansvote',
   };
 
