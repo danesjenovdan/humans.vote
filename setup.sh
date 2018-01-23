@@ -11,7 +11,7 @@ read -p "Wallet password: " password; echo
 stty echo
 
 #install packages
-apt-get install software-properties-common
+apt-get install software-properties-common -y
 add-apt-repository ppa:ethereum/ethereum -y
 apt-get update
 apt-get install ethereum -y
@@ -41,8 +41,10 @@ $run_node > /dev/null 2>&1  &
 
 account_address=$(echo $account_address | cut -d'{' -f 2| cut -d'}' -f 1)
 
+cp -r ~/.ethereum/keystore ./eth-data
+
 echo 0x$account_address > wallet.address
 
-run_geth=$(geth --datadir=eth-data --bootnodes=$enode --mine --minerthreads=1 --rpc --rpccorsdomain "*" --rpcaddr 172.0.0.1 --rpcport 8683 --etherbase=0x$account_address console)
+run_geth=$(geth --datadir=eth-data --bootnodes=$enode --mine --minerthreads=1 --rpc --rpccorsdomain "*" --rpcaddr 127.0.0.1 --rpcport 7001 --etherbase=0x$account_address)
 $run_geth 
 
