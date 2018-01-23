@@ -5,7 +5,6 @@ import { ConfigProvider } from '../../providers/config/config';
 import { TRANSACTION_STATUS, WalletUtilsProvider } from '../../providers/wallet-utils/wallet-utils';
 import { ITransaction, StorageProvider } from '../../providers/storage/storage';
 
-
 @Component({
   selector: 'page-contracts',
   templateUrl: 'contracts.html',

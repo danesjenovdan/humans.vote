@@ -1,6 +1,31 @@
-<ion-content padding>
-  <h1>Device setup</h1>
-  <ion-label color="primary">Enter node url</ion-label>
-  <ion-input placeholder="http://localhost:3040" [(ngModel)]="rpcUrl"></ion-input>
-  <button (click)="setupTap()" ion-button block>Setup</button>
+<ion-content padding center text-center class="vertical-align-content">
+    <ion-grid>
+        <ion-row center>
+            <ion-col>
+                <div class="intro-page-container" *ngIf="page === 'WALLET'">
+                    <h1>Your wallet</h1>
+                    <br/>
+                    <p class="label-ios-primary"><b>Tap on the wallet address to copy it to your clipboard</b><br/> and
+                        share it with your voting admin</p>
+                    <hr/>
+                    <div class="intro-wallet-address" (click)="onAddressTap()">{{address}}</div>
+                    <br/>
+                    <button (click)="walletDoneTap()" ion-button block>Done</button>
+                </div>
+                <div *ngIf="page === 'URL'">
+                    <h1>Connect to your node</h1>
+                    <p class="label-ios-primary"><b>Please enter the RPC URL</b><br/> you've recieved from your voting
+                        admin</p>
+                    <hr/>
+                    <ion-input placeholder="Enter URL here..." [(ngModel)]="rpcUrl"></ion-input>
+                    <button (click)="rpcDoneTap()" ion-button block>Set url</button>
+                </div>
+                <div *ngIf="page === 'DONE'">
+                    <h1>That's it!</h1>
+                    <p class="label-ios-primary">You can change the node or check your wallet address in your profile page.</p>
+                    <button (click)="endTap()" ion-button block>ALRIGHT</button>
+                </div>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
 </ion-content>

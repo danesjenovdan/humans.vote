@@ -1,29 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { WalletUtilsProvider } from '../../providers/wallet-utils/wallet-utils';
 import { ConfigProvider } from '../../providers/config/config';
-import { ViewController } from 'ionic-angular';
+import { Platform, ViewController } from 'ionic-angular';
 import { StorageProvider } from '../../providers/storage/storage';
+import { Clipboard } from '@ionic-native/clipboard';
+import { Toast } from '@ionic-native/toast';
 
-/**
- * Generated class for the ModalIntroComponent component.
- *
- * See https://angular.io/api/core/Component for more info on Angular
- * Components.
- */
 @Component({
   selector: 'modal-intro',
   templateUrl: 'modal-intro.html'
 })
-export class ModalIntroComponent {
+export class ModalIntroComponent implements OnInit {
 
   text: string;
-  rpcUrl: string;
+  rpcUrl: string = 'http://51.15.206.108';
+  port: number;
+  address: string;
+  page: string = 'WALLET';
 
   constructor(
     private walletUtils: WalletUtilsProvider,
     private storage: StorageProvider,
     private config: ConfigProvider,
-    private viewCtrl: ViewController
+    private viewCtrl: ViewController,
+    private clipboard: Clipboard,
+    private toast: Toast,
+    private platform: Platform
   ) {
 
     console.log('Hello ModalIntroComponent Component');
@@ -31,16 +33,50 @@ export class ModalIntroComponent {
 
   }
 
-  async setupTap() {
+  async ngOnInit() {
 
-    if(!this.walletUtils.validateUrl(this.rpcUrl)) return alert('Url is invalid');
+    const wallet = await this.walletUtils.initWallet(false);
+    this.address = wallet.address;
+    this.port = this.config.port;
 
-    this.config.provider.url = this.rpcUrl;
-    await this.storage.setRPCUrl(this.rpcUrl);
+  }
+
+  onAddressTap() {
+
+    this.clipboard.copy(this.address);
+
+    if (this.platform.is('mobile')) {
+      this.toast.show(`Wallet address copied to clipboard`, '3000', 'bottom').subscribe(
+        toast => {
+          console.log(toast);
+        }
+      );
+    }
+
+  }
+
+  walletDoneTap() {
+
+    this.page = 'URL';
+
+  }
+
+  async rpcDoneTap() {
+
+    if (!this.walletUtils.validateUrl(this.rpcUrl)) return alert('Url is invalid');
+
+    console.log('+this.port: ',this.port);
+
+    this.config.provider.url = this.rpcUrl+':'+this.port;
+    await this.storage.setRPCUrl(this.rpcUrl+':'+this.port);
     await this.walletUtils.initWallet();
 
-    this.viewCtrl.dismiss();
+    this.page = 'DONE';
 
+  }
+
+  endTap() {
+    this.viewCtrl.dismiss();
   }
 
 }

@@ -28,7 +28,7 @@ export class WalletUtilsProvider {
    * Initialize wallet
    * @returns {Promise<boolean>}
    */
-  async initWallet() {
+  async initWallet(withProvider = true) {
 
     const privateKey = await this.keyUtils.initKey();
     const rpcUrl = await this.storage.getRPCUrl();
@@ -40,7 +40,11 @@ export class WalletUtilsProvider {
 
     if (!privateKey) throw new Error('No private key when creating the wallet');
 
-    this.wallet = new ethers.Wallet(privateKey, this.provider);
+    if(withProvider) {
+      this.wallet = new ethers.Wallet(privateKey, this.provider);
+    }else{
+      this.wallet = new ethers.Wallet(privateKey);
+    }
 
     return this.wallet;
 
@@ -178,7 +182,7 @@ export class WalletUtilsProvider {
    * @param {string} url
    */
   validateUrl(url: string) {
-    return isURL(url, { require_tld: false });
+    return isURL(url, { require_tld: false, require_protocol:true });
   }
 
 }
