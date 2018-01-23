@@ -159,7 +159,7 @@ export class WalletUtilsProvider {
 
       const contract = new ethers.Contract(address, abi, this.provider);
       console.log(contract);
-      const result = await contract.greet();
+      const result = await contract.majorityMargin();
       return result;
 
     } catch (err) {
