@@ -34,9 +34,13 @@ export class ProposalsPage implements OnInit {
 
   }
 
+  /**
+   * [TAP] Check balance on selected address
+   * @returns {Promise<void>}
+   */
   async checkAddressBalanceTap() {
 
-    if (!this.walletUtils.validateAddress(this.balanceCheckAddress)) return alert('Invalid ethereum address');
+    if (!this.walletUtils.validateAddress(this.balanceCheckAddress)) return alert('Invalid ethereum contractAddress');
 
     try {
       this.addressBalance = await this.walletUtils.checkAddressBalance(this.balanceCheckAddress);
@@ -47,6 +51,10 @@ export class ProposalsPage implements OnInit {
 
   }
 
+  /**
+   * [TAP] Check balance on my wallet
+   * @returns {Promise<void>}
+   */
   async checkMyBalanceTap() {
 
     try {
@@ -57,9 +65,13 @@ export class ProposalsPage implements OnInit {
 
   }
 
+  /**
+   * [TAP] Send ether
+   * @returns {Promise<any>}
+   */
   async sendEthTap() {
 
-    if (!this.walletUtils.validateAddress(this.recipientAddress)) return alert('Invalid ethereum address');
+    if (!this.walletUtils.validateAddress(this.recipientAddress)) return alert('Invalid ethereum contractAddress');
     try {
 
       console.log('this.etherValue: ', this.etherValue);
@@ -82,6 +94,5 @@ export class ProposalsPage implements OnInit {
     }
 
   }
-
 
 }

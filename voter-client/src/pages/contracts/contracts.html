@@ -23,12 +23,15 @@
         <ion-list>
             <button ion-item *ngFor="let contract of contracts">
                 {{ contract.name }}
-                <button ion-button=""
-                        (click)="onContractTap(contract)"
-                        item-end=""
-                        outline=""
-                        class="disable-hover item-button button button-ios button-outline button-outline-ios">
-                    <span class="button-inner">Deploy</span>
+                <button ion-button
+                        (click)="onDeployTap(contract)"
+                        item-end
+                        [disabled]="isContractDeployed(contract)"
+                        [outline]="!isContractDeployed(contract)"
+                        [color]="isContractDeployed(contract)?'secondary':'primary'"
+                        [class.buttonOutlineIos]="!isContractDeployed(contract)"
+                        class="disable-hover item-button button button-ios">
+                    <span class="button-inner">{{isContractDeployed(contract)?'Deployed':'Deploy'}}</span>
                 </button>
             </button>
         </ion-list>
@@ -40,18 +43,32 @@
     </div>
 
     <div *ngIf="page === 'active'" style="text-align: center;">
-        <span *ngIf="deployedContracts.length === 0">No active contracts. Deploy some by tapping on the top right.</span>
+        <div padding *ngIf="deployedContracts.length === 0">
+            <span>No active contracts. <br/>Deploy some by tapping on the top right.</span>
+        </div>
         <div style="text-align: center;" *ngIf="loading">
             <ion-spinner></ion-spinner>
         </div>
         <ion-list>
-            <button ion-item *ngFor="let contract of deployedContracts" (click)="onActiveContractTap(contract)">
+            <button ion-item *ngFor="let contract of deployedContracts">
                 {{ contract.name }}
+                <ion-spinner *ngIf="contract.status === 'MINING'"
+                             name="dots"
+                             style="margin-bottom:-9px; margin-left:10px;"></ion-spinner>
                 <button ion-button=""
                         item-end=""
                         outline=""
+                        *ngIf="contract.status !== 'MINING'"
+                        (click)="onActiveContractTap(contract)"
                         class="disable-hover item-button button button-ios button-outline button-outline-ios">
                     <span class="button-inner">View</span>
+                </button>
+                <button ion-button=""
+                        item-end=""
+                        outline=""
+                        (click)="removeContractTap(contract)"
+                        class="disable-hover item-button button button-ios button-outline button-outline-ios">
+                    <span class="button-inner">Remove</span>
                 </button>
             </button>
         </ion-list>

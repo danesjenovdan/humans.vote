@@ -47,7 +47,7 @@ export class WalletUtilsProvider {
   }
 
   /**
-   * Returns wallet address
+   * Returns wallet contractAddress
    * @returns {any}
    */
   get walletAddress() {
@@ -56,7 +56,7 @@ export class WalletUtilsProvider {
   }
 
   /**
-   * Check balance of a wallet with the passed address
+   * Check balance of a wallet with the passed contractAddress
    * @param address
    * @returns {Promise<any>}
    */
@@ -90,44 +90,82 @@ export class WalletUtilsProvider {
    */
   async deployContract(abi: string, bin: string, name: string) {
 
-    // Notice we pass in "Hello World" as the parameter to the constructor
     try {
+
+      // Notice we pass in "Hello World" as the parameter to the constructor
       const deployTransaction = Contract.getDeployTransaction(bin, abi, "Hello World");
       // Send the transaction
       const contractResponse = await this.wallet.sendTransaction(deployTransaction);
-      await this.storage.addDeployedContract({
+
+      // get transaction info
+      const transactionInfo = await this.getTransaction(contractResponse.hash);
+
+      await this.storage.addDeployedTransaction({
         hash: contractResponse.hash,
+        status: TRANSACTION_STATUS.MINING,
+        contractAddress: transactionInfo.creates,
         abi,
         name
       });
-      console.log(contractResponse);
+
+      // Get notified when a transaction is mined
+      this.provider.once(contractResponse.hash, (transaction) => {
+        this.storage.updateTransactionStatus(transaction.hash, TRANSACTION_STATUS.MINED, transaction.creates);
+      });
+
       return contractResponse;
+
     } catch (err) {
       return Promise.reject(err);
     }
 
   }
 
-  async connectToContract(address, abi){
+  /**
+   * Get transaction receipt. Only availabe after transaction is mined.
+   * @param hash
+   * @returns {Promise<any>}
+   */
+  async getTransactionReceipt(hash) {
+
+    return await this.provider.getTransactionReceipt(hash);
+
+  }
+
+  /**
+   * Get transaction from provider
+   * @param hash
+   * @returns {Promise<any>}
+   */
+  async getTransaction(hash) {
+
+    return await this.provider.getTransaction(hash);
+
+  }
+
+  /**
+   * Connect to contract
+   * @param address
+   * @param abi
+   * @returns {Promise<any>}
+   */
+  async connectToContract(address, abi) {
 
     try {
 
       const contract = new ethers.Contract(address, abi, this.provider);
-
       console.log(contract);
-
       const result = await contract.greet();
+      return result;
 
-      console.log(result);
-
-    }catch(err){
+    } catch (err) {
       console.log(err);
     }
 
   }
 
   /**
-   * Validate ethereum address
+   * Validate ethereum contractAddress
    * @param {string} address
    * @returns {any}
    */
@@ -155,3 +193,8 @@ export interface ITransaction {
   chainId?: number;
 
 }
+
+export const TRANSACTION_STATUS = {
+  MINING: 'MINING',
+  MINED: 'MINED'
+};

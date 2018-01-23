@@ -45,13 +45,22 @@ export class StorageProvider {
     return this.storage.get('privateKey');
   }
 
-  async getDeployedContracts(): Promise<Array<IContract>> {
+  /**
+   *
+   * @returns {Promise<Array<ITransaction>>}
+   */
+  async getDeployedTransactions(): Promise<Array<ITransaction>> {
 
-    return await this.storage.get('contracts') as IContract[];
+    return await this.storage.get('contracts') || [] as ITransaction[];
 
   }
 
-  async addDeployedContract(contract: IContract) {
+  /**
+   * Add deployed transaction
+   * @param {ITransaction} contract
+   * @returns {Promise<any>}
+   */
+  async addDeployedTransaction(contract: ITransaction) {
 
     let contracts = await this.storage.get('contracts');
 
@@ -59,20 +68,61 @@ export class StorageProvider {
 
     contracts.push(contract);
 
+    console.log(contracts);
+
     return this.storage.set('contracts', contracts);
 
   }
 
-  removeDeployedContract() {
+  /**
+   * Update transaction status
+   * @param {string} hash
+   * @param {string} status
+   * @param {string} address
+   * @returns {Promise<any>}
+   */
+  async updateTransactionStatus(hash: string, status: string, address: string) {
+
+    const contracts = await this.getDeployedTransactions();
+
+    const contract = contracts.filter(contract => contract.hash === hash)[0];
+
+    if (!contract) return null;
+
+    if(status) {
+      contract.status = status;
+    }
+    contract.contractAddress = address;
+
+    return this.storage.set('contracts', contracts);
+
+  }
+
+  /**
+   * Remove transaction reference from local storage
+   * @param hash
+   * @returns {Promise<any>}
+   */
+  async removeDeployedTransaction(hash) {
+
+    const contracts = await this.getDeployedTransactions();
+
+    contracts.forEach((contract,i) => {
+      if(contract.hash === hash) contracts.splice(i,1);
+    });
+
+    return this.storage.set('contracts', contracts);
 
   }
 
 }
 
-export interface IContract {
+export interface ITransaction {
 
+  status: string;
   name: string;
   abi: string;
   hash: string;
+  contractAddress?: string;
 
 }
