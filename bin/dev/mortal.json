@@ -1,0 +1,18 @@
+{
+    "abi": "[{\"constant\":false,\"inputs\":[],\"name\":\"kill\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}]",
+    "bytecode": "6060604052341561000f57600080fd5b60008054600160a060020a033316600160a060020a031990911617905560c18061003a6000396000f300606060405260043610603e5763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166341c0e1b581146043575b600080fd5b3415604d57600080fd5b60536055565b005b6000543373ffffffffffffffffffffffffffffffffffffffff9081169116141560935760005473ffffffffffffffffffffffffffffffffffffffff16ff5b5600a165627a7a72305820d2e31f4e5e381d9be99ec23f44402d0157a0f29b0204ddda475b53819311697a0029",
+    "functionHashes": {
+        "kill()": "41c0e1b5"
+    },
+    "gasEstimates": {
+        "creation": [
+            20461,
+            38600
+        ],
+        "external": {
+            "kill()": 30567
+        },
+        "internal": {}
+    },
+    "runtimeBytecode": "606060405260043610603e5763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166341c0e1b581146043575b600080fd5b3415604d57600080fd5b60536055565b005b6000543373ffffffffffffffffffffffffffffffffffffffff9081169116141560935760005473ffffffffffffffffffffffffffffffffffffffff16ff5b5600a165627a7a72305820d2e31f4e5e381d9be99ec23f44402d0157a0f29b0204ddda475b53819311697a0029"
+}
