@@ -1,11 +1,13 @@
 pragma solidity ^0.4.18;
 
 import "../utils/PrivateOrg.sol";
+import "../utils/Motion.sol";
 
 
 contract Organisation is PrivateOrg {
     // Contract Variables and events
     string public organisationName;
+    
 
     event OrganisationNameChanged(string organisationName);
 
@@ -35,5 +37,6 @@ contract Organisation is PrivateOrg {
         // fire ChangeOfRules event
         OrganisationNameChanged(newOrganisationName);
     }
-}
 
+    
+}
