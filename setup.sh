@@ -46,7 +46,7 @@ if [ $ADDRESS  ]
 	rm cache.tmp
 	account_address=0x$(echo $account_address | cut -d'{' -f 2| cut -d'}' -f 1)
 	echo $account_address > wallet.address
-	$ADDRESS=$account_address
+	ADDRESS=$account_address
 	echo 'your wallet addres is in wallet.address'
 fi
 
