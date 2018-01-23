@@ -6,6 +6,7 @@ import { ProfilePage } from '../profile/profile';
 import { ModalController, NavParams } from 'ionic-angular';
 import { ModalIntroComponent } from '../../components/modal-intro/modal-intro';
 import { StorageProvider } from '../../providers/storage/storage';
+import { ContractsPage } from '../contracts/contracts';
 
 @Component({
   templateUrl: 'tabs.html'
@@ -17,7 +18,8 @@ export class TabsPage {
   address;
 
   tab1Root = ProposalsPage;
-  tab2Root = ProfilePage;
+  tab2Root = ContractsPage;
+  tab3Root = ProfilePage;
 
   constructor(private walletUtils: WalletUtilsProvider, private modalCtrl: ModalController, private storage: StorageProvider) {
 
