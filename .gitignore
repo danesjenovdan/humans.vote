@@ -1,5 +1,5 @@
 # compiled contracts
-/bin
+# /bin
 
 # actual chain data
 /eth-data
