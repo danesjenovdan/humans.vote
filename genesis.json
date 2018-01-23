@@ -1,6 +1,6 @@
 {
   "config": {
-    "chainId": 9999,
+    "chainId": XXXX,
     "homesteadBlock": 0,
     "eip155Block": 0,
     "eip158Block": 0
@@ -9,8 +9,8 @@
   "coinbase": "0x0000000000000000000000000000000000000000",
   "difficulty": "0x20000",
   "extraData": "",
-  "gasLimit": "0x2fefd8",
-  "nonce": "0x3200520012004242",
+  "gasLimit": "0xHLnMD",
+  "nonce": "0xZZZZ",
   "mixhash": "0x0000000000000000000000000000000000000000000000000000000000000000",
   "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
   "timestamp": "0x00"
