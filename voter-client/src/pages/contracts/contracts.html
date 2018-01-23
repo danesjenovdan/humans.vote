@@ -24,7 +24,7 @@
             <button ion-item *ngFor="let contract of contracts">
                 {{ contract.name }}
                 <button ion-button
-                        (click)="onDeployTap(contract)"
+                        (click)="openModal(contract)"
                         item-end
                         [disabled]="isContractDeployed(contract)"
                         [outline]="!isContractDeployed(contract)"

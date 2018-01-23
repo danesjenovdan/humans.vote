@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      {{contractName}}
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismiss()">
+        <ion-icon name="md-close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+  <ion-list>
+    <ion-item *ngFor="let field of fields">
+      <ion-label floating>
+        {{ field.name }}
+      </ion-label>
+      <ion-input type="{{ field.type }}"
+                 [(ngModel)]="field.value"></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <button ion-button
+          block
+          (click)="onDeployTap()">Deploy</button>
+</ion-content>

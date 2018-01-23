@@ -1,5 +1,6 @@
+import { includes, startCase } from 'lodash';
 import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, ModalController, NavController, NavParams, ViewController } from 'ionic-angular';
 import { HttpProvider } from '../../providers/http/http';
 import { ConfigProvider } from '../../providers/config/config';
 import { TRANSACTION_STATUS, WalletUtilsProvider } from '../../providers/wallet-utils/wallet-utils';
@@ -20,9 +21,9 @@ export class ContractsPage implements OnInit {
     private navCtrl: NavController,
     public navParams: NavParams,
     private httpProvider: HttpProvider,
-    private config: ConfigProvider,
     private storage: StorageProvider,
-    private walletUtils: WalletUtilsProvider
+    private walletUtils: WalletUtilsProvider,
+    public modalCtrl: ModalController
   ) {
   }
 
@@ -87,31 +88,6 @@ export class ContractsPage implements OnInit {
   }
 
   /**
-   * Tap on deploy contract
-   * @param contract
-   * @returns {Promise<void>}
-   */
-  async onDeployTap(contract) {
-
-    // assemble urls for abi and bin file on github
-    const abiUrl = `${this.config.contractsUrl}${contract.name}/${contract.name}.abi`;
-    const binUrl = `${this.config.contractsUrl}${contract.name}/${contract.name}.bin`;
-
-    // request abi and bin file contents
-    const abiResponse = await this.httpProvider.get(abiUrl);
-    const binResponse = '0x' + await this.httpProvider.get(binUrl);
-
-    await this.walletUtils.deployContract(abiResponse, binResponse, [1, 2, 1])
-      .catch((err) => {
-        console.log(err);
-        alert('There was a problem when deploying this contract');
-      });
-
-    this.getDeployedContracts();
-
-  }
-
-  /**
    * Tap on deployed contract to view it's contents
    * @param contract
    * @returns {Promise<void>}
@@ -171,4 +147,74 @@ export class ContractsPage implements OnInit {
 
   }
 
+  /**
+   * Open modal with contract deploy params
+   * @param contract
+   */
+  async openModal(contract) {
+    const abi = await this.httpProvider.getContractAbi(contract.name);
+    const modal = this.modalCtrl.create(ContractFormPage, { contract, abi });
+    modal.present();
+  }
+}
+
+@Component({
+  templateUrl: 'contractForm.html'
+})
+export class ContractFormPage {
+  contractName: string;
+  fields: Array<Object>;
+
+  constructor(
+    public params: NavParams,
+    public viewCtrl: ViewController,
+    private config: ConfigProvider,
+    private httpProvider: HttpProvider,
+    private walletUtils: WalletUtilsProvider,
+  ) {
+    const fields = this.params.get('abi')
+      .find(item => item.type === 'constructor')
+      .inputs
+        .map(field => ({
+          name: startCase(field.name),
+          type: includes(field.type, 'int') ? 'number' : 'text',
+          value: '',
+        }));
+
+    this.contractName = this.params.get('contract').name;
+    this.fields = fields;
+  }
+
+  /**
+   * Close modal
+   */
+  dismiss() {
+    this.viewCtrl.dismiss();
+  }
+
+  /**
+   * Tap on deploy contract
+   * @param contract
+   * @returns {Promise<void>}
+   */
+  async onDeployTap() {
+    const contractArgs = this.fields.map(field => field.value);
+
+    // assemble urls for abi and bin file on github
+    const abiUrl = `${this.config.contractsUrl}${this.contractName}/${this.contractName}.abi`;
+    const binUrl = `${this.config.contractsUrl}${this.contractName}/${this.contractName}.bin`;
+
+    // request abi and bin file contents
+    const abiResponse = await this.httpProvider.get(abiUrl);
+    const binResponse = '0x' + await this.httpProvider.get(binUrl);
+
+    await this.walletUtils.deployContract(abiResponse, binResponse, contractArgs)
+      .catch((err) => {
+        console.log(err);
+        alert('There was a problem when deploying this contract');
+      });
+
+    this.dismiss();
+    // this.getDeployedContracts();
+  }
 }
