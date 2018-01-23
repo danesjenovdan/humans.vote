@@ -3,7 +3,7 @@ pragma solidity ^0.4.18;
 import "../utils/PrivateOrg.sol";
 
 
-contract PrivateOrganisation is PrivateOrg {
+contract SimpleVoting is PrivateOrg {
     // Contract Variables and events
     uint public minimumQuorum; // minimum quorum defined as an absolute number of voters
     uint public debatingPeriodInMinutes;
@@ -39,7 +39,7 @@ contract PrivateOrganisation is PrivateOrg {
      * Constructor function
      * Needs minimumQuorumForProposals, minutesForDevate, marginOfVotesForMajority
      */
-    function PrivateOrganisation (
+    function SimpleVoting (
         uint minimumQuorumForProposals,
         uint minutesForDebate,
         int marginOfVotesForMajority
