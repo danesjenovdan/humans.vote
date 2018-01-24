@@ -25,6 +25,8 @@ contract DemoVoting is PrivateOrg {
         int currentResult;
         Vote[] votes; // dynamic array of Vote objects
         mapping (address => bool) voted; // mapping of addresses to store who voted
+        uint votesFor;
+        uint votesAgainst;
     }
 
     // vote "object" structure
@@ -113,13 +115,27 @@ contract DemoVoting is PrivateOrg {
         p.numberOfVotes++; // Increase the number of votes
         if (supportsProposal) { // If they support the proposal
             p.currentResult++; // Increase score
+            p.votesFor++;
         } else { // If they don't
             p.currentResult--; // Decrease the score
+            p.votesAgainst++;
         }
 
         // Create a log of this event (emit so app can update)
         Voted(proposalNumber, supportsProposal, msg.sender, justificationText);
         return p.numberOfVotes;
+    }
+
+    function getNumberOfVotesForProposal(uint proposalNumber) public view returns (uint votesFor) {
+        Proposal storage p = proposals[proposalNumber];
+        
+        return p.votesFor;
+    }
+    
+    function getNumberOfVotesAgainstProposal(uint proposalNumber) public view returns (uint votesFor) {
+        Proposal storage p = proposals[proposalNumber];
+        
+        return p.votesAgainst;
     }
 
     /**
@@ -141,11 +157,11 @@ contract DemoVoting is PrivateOrg {
         if (p.currentResult >= majorityMargin) {
             // Proposal passed
             p.proposalPassed = true;
-            proposalResult = "The proposal passed. Congrats!";
+            proposalResult = 'The proposal passed. Congrats!';
         } else {
             // Proposal failed
             p.proposalPassed = false;
-            proposalResult = "The proposal did not pass (yet).";
+            proposalResult = 'The proposal did not pass (yet).';
         }
 
 
