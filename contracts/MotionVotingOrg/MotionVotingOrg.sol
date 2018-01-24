@@ -1,10 +1,12 @@
 pragma solidity ^0.4.18;
 
-import "../Organisation/Organisation.sol";
+import "../utils/PrivateOrg.sol";
 
 
-contract MotionVotingOrg is Organisation {
+contract MotionVotingOrg is PrivateOrg {
+
     // Contract Variables and events
+    string public organisationName;
     Motion[] public motions;
     uint public numberOfMotions;
 
@@ -43,6 +45,22 @@ contract MotionVotingOrg is Organisation {
     ) public {
         // initialise state
         numberOfMotions = 0;
+    }
+
+    /**
+     * Change organisation name
+     * 
+     * takes newOrganisationName
+     * 
+     * modified with onlyOwner
+     */
+    function changeOrganisationName(
+        string newOrganisationName
+    ) public onlyOwner {
+        organisationName = newOrganisationName;
+
+        // fire ChangeOfRules event
+        // OrganisationNameChanged(newOrganisationName);
     }
 
     function addBasicMotion(
