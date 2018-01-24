@@ -5,7 +5,7 @@ var token = tokenContract.new(
   "OOOO",
   {
     from:"QQQQ",
-    data: "DDDD",
+    data: "0xDDDD",
     gas: 1000000000
   }, function(e, contract){
     if(!e) {
