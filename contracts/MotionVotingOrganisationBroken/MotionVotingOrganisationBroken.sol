@@ -99,20 +99,22 @@ contract MotionVotingOrganisationBroken is PrivateOrg {
     function voteForMotion(uint _motionID, string _option) public onlyMembers {
         Motion storage m = motions[_motionID]; // get motion
 
-        // user can only vote once
-        require(!m.voted[msg.sender]); // If has already voted, cancel
-        m.voted[msg.sender] = true; // Set this voter as having voted
+        // // user can only vote once
+        // require(!m.voted[msg.sender]); // If has already voted, cancel
+        // m.voted[msg.sender] = true; // Set this voter as having voted
 
-        uint optionID = findOption(_motionID, _option); // get relevant option id
+        // uint optionID = findOption(_motionID, _option); // get relevant option id
 
         // create vote
-        uint voteID = m.votes.length++;
-        Vote storage v = m.votes[voteID];
-        v.optionID = optionID;
+        Vote[] storage vs = m.votes;
+        uint voteID = vs.length++;
+
+        Vote storage v = vs[voteID];
+        v.optionID = 0;
         v.voter = msg.sender;
 
         // increase number of votes
-        Option storage o = m.options[optionID];
+        Option storage o = m.options[0];
         o.numberOfVotes++;
 
         // fire event

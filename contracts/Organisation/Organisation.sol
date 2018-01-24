@@ -16,10 +16,10 @@ contract Organisation is PrivateOrg {
      * Needs _organisationName
      */
     function Organisation (
-        // string _organisationName
+        string _organisationName
     ) public {
         // set voting rules at contract initialisation
-        // organisationName = _organisationName;
+        organisationName = _organisationName;
     }
 
     /**
