@@ -1,0 +1,21 @@
+modal-intro {
+
+  .intro-wallet-address{
+
+    background-color: #eee;
+    border-radius: 5px;
+    font-size:13px;
+    font-weight: 600;
+    color:#444;
+    padding: 10px 0;
+
+  }
+
+  .vertical-align-content > *
+  {
+    display: flex!important;
+    align-content: center!important;
+    align-items: center!important;
+  }
+
+}

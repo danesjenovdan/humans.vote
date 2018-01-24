@@ -1,0 +1,47 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>
+            {{title}}
+        </ion-title>
+        <ion-buttons start>
+            <button ion-button (click)="dismiss()" style="margin-right: 10px;">
+                <ion-icon name="md-close"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content padding>
+
+    <h4 *ngIf="inputs.length === 0" style="text-align:center;">
+        Nothing to fill out. Just submit :)
+    </h4>
+
+    <ion-list>
+        <div *ngFor="let field of inputs" style="display: flex;">
+            <ion-item item-left style="flex-grow: 2">
+                <ion-label floating>
+                    {{ field.name }} ({{field.type}} {{field.type === 'address'?', without 0x!':''}})
+                </ion-label>
+                <ion-input
+                        [type]="field.type === 'uint256'?'number':'string'"
+                        [(ngModel)]="field.value"></ion-input>
+            </ion-item>
+            <div style="flex-grow: 1">
+                <button style="width:40px; height:40px; padding:0; margin-bottom:-60px;"
+                        small
+                        ion-button
+                        (click)="scanQr(field)"
+                        round
+                        outline>
+                    <ion-icon name="ios-qr-scanner"></ion-icon>
+                </button>
+            </div>
+        </div>
+    </ion-list>
+
+</ion-content>
+<ion-footer>
+    <ion-toolbar>
+        <button [disabled]="submitting" ion-button large block (click)="submit()">{{submitting?'submitting':'submit'}}</button>
+    </ion-toolbar>
+</ion-footer>
