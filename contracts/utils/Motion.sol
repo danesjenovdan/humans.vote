@@ -1,9 +1,7 @@
 pragma solidity ^0.4.18;
 
-import "../utils/Owned.sol";
 
-
-contract Motion is Owned {
+contract Motion {
     // Contract Variables and events
     uint public minimumQuorum; // minimum quorum defined as an absolute number of voters
     uint public debatingPeriodInMinutes;
@@ -56,12 +54,11 @@ contract Motion is Owned {
      * Change voting rules
      *
      *
-     * modified with onlyOwner
      */
     function changeVotingRules(
         uint minimumQuorumForProposals,
         int percentageOfVotesForMajority
-    ) public onlyOwner {
+    ) public {
         minimumQuorum = minimumQuorumForProposals;
         majorityPercentage = percentageOfVotesForMajority;
 
