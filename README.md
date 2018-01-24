@@ -2,8 +2,12 @@
 Blockchain voting for humans
 
 ## What we wanted to do in 48 hours
+![Admin Flow](http://humans.vote/images/image1.png)
+![User Flow](http://humans.vote/images/image2.png)
 
 ## What we achieved in 48 hours
+
+[Android APK](https://github.com/danesjenovdan/humans.vote/blob/master/voter-client/android-debug.apk?raw=true)
 
 ## Design documentation
 [Google Doc with stuff](https://docs.google.com/document/d/1HivUUGqH4lilm60n36SA12tUegNr2g3yyi_9uRWT29I/edit#)
