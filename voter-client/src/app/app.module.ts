@@ -20,6 +20,8 @@ import { HttpProvider } from '../providers/http/http';
 import { ContractsPage, ContractFormPage } from '../pages/contracts/contracts';
 import { Toast } from '@ionic-native/toast';
 import { Clipboard } from '@ionic-native/clipboard';
+import { NgxQRCodeModule } from '@techiediaries/ngx-qrcode';
+import { QRScanner } from '@ionic-native/qr-scanner';
 
 @NgModule({
   declarations: [
@@ -49,7 +51,8 @@ import { Clipboard } from '@ionic-native/clipboard';
       name: '__mydb',
       driverOrder: ['indexeddb']
     }),
-    HttpClientModule
+    HttpClientModule,
+    NgxQRCodeModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -71,7 +74,8 @@ import { Clipboard } from '@ionic-native/clipboard';
     WalletUtilsProvider,
     HttpProvider,
     Toast,
-    Clipboard
+    Clipboard,
+    QRScanner
   ]
 })
 export class AppModule {}

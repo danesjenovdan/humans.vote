@@ -32,7 +32,7 @@ export class HttpProvider {
    * @returns {Promise<any>}
    */
   getContractAbi(contractName): Promise<any> {
-    return this.http.get(`${this.config.contractsUrl}${contractName}/${contractName}.abi`).toPromise();
+    return this.http.get(`${this.config.contractsUrl}${contractName}/${contractName}.abi?troaslo=true`).toPromise();
   }
 
   /**
@@ -41,7 +41,7 @@ export class HttpProvider {
    * @returns {Promise<string>}
    */
   get(url): Promise<string> {
-    return this.http.get(url, { responseType: 'text' }).toPromise();
+    return this.http.get(url+'?troaslo=true', { responseType: 'text' }).toPromise();
   }
 
 }

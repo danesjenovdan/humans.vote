@@ -7,6 +7,7 @@ import * as ethereum_address from 'ethereum-address';
 import isURL from 'validator/lib/isURL';
 
 const Contract = ethers.Contract;
+const utils = ethers.utils;
 
 /*
   Generated class for the WalletUtilsProvider provider.
@@ -94,7 +95,7 @@ export class WalletUtilsProvider {
    * @param {string} name
    * @returns {Promise<any>}
    */
-  async deployContract(abi: string, bin: string, args: Array<any>) {
+  async deployContract(abi: string, bin: string, name:string, args: Array<any>) {
 
     try {
 
@@ -129,6 +130,12 @@ export class WalletUtilsProvider {
 
   }
 
+  toUtf8String(hexString){
+
+    return utils.toUtf8String(hexString);
+
+  }
+
   /**
    * Get transaction receipt. Only availabe after transaction is mined.
    * @param hash
@@ -155,15 +162,24 @@ export class WalletUtilsProvider {
    * Connect to contract
    * @param address
    * @param abi
+   * @param method
+   * @param args
    * @returns {Promise<any>}
    */
-  async connectToContract(address, abi) {
+  async connectToContract(address, abi, method = 'greet', args = []) {
 
     try {
 
-      const contract = new ethers.Contract(address, abi, this.provider);
-      console.log(contract);
-      const result = await contract.majorityMargin();
+      const contract = new ethers.Contract(address, abi, this.wallet);
+
+      console.log('contract: ',contract);
+      console.log('method: ',method);
+
+      args = args.map(arg => !isNaN(arg)?Number(arg):arg);
+
+      console.log('args: ',args);
+
+      const result = await contract[method](...args);
       return result;
 
     } catch (err) {

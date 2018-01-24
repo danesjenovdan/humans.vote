@@ -33,10 +33,10 @@ export class TabsPage {
       const rpcUrl = await this.storage.getRPCUrl();
 
       // if it's set initialize wallet
-      if (rpcUrl) {
-        await this.walletUtils.initWallet();
-        return resolve();
-      }
+      // if (rpcUrl) {
+      //   await this.walletUtils.initWallet();
+      //   return resolve();
+      // }
 
       // if it's not set open an intro modal where it needs to be entered
       let profileModal = this.modalCtrl.create(ModalIntroComponent);

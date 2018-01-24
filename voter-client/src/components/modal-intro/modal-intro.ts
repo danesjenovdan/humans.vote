@@ -17,6 +17,7 @@ export class ModalIntroComponent implements OnInit {
   port: number;
   address: string;
   page: string = 'WALLET';
+  isAdmin = false;
 
   constructor(
     private walletUtils: WalletUtilsProvider,
@@ -55,7 +56,14 @@ export class ModalIntroComponent implements OnInit {
 
   }
 
-  walletDoneTap() {
+  walletDoneTap(isAdmin) {
+
+    this.page = isAdmin?'ADMIN':'URL';
+    this.isAdmin = isAdmin;
+
+  }
+
+  adminDoneTap(){
 
     this.page = 'URL';
 
@@ -66,6 +74,8 @@ export class ModalIntroComponent implements OnInit {
     if (!this.walletUtils.validateUrl(this.rpcUrl)) return alert('Url is invalid');
 
     console.log('+this.port: ',this.port);
+
+    // todo - confirm that this wallet is owner of a contract there?
 
     this.config.provider.url = this.rpcUrl+':'+this.port;
     await this.storage.setRPCUrl(this.rpcUrl+':'+this.port);

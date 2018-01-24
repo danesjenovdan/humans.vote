@@ -5,6 +5,9 @@ import { HttpProvider } from '../../providers/http/http';
 import { ConfigProvider } from '../../providers/config/config';
 import { TRANSACTION_STATUS, WalletUtilsProvider } from '../../providers/wallet-utils/wallet-utils';
 import { ITransaction, StorageProvider } from '../../providers/storage/storage';
+import { ModalContractViewComponent } from '../../components/modal-contract-view/modal-contract-view';
+
+declare var cordova;
 
 @Component({
   selector: 'page-contracts',
@@ -81,7 +84,7 @@ export class ContractsPage implements OnInit {
    * @param contract
    * @returns {boolean}
    */
-  isContractDeployed(contract){
+  isContractDeployed(contract) {
 
     return !!this.deployedContracts.filter(_contract => _contract.name === contract.name).length;
 
@@ -94,8 +97,16 @@ export class ContractsPage implements OnInit {
    */
   async onActiveContractTap(contract) {
 
-    const result = await this.walletUtils.connectToContract(contract.contractAddress, contract.abi);
-    alert(result);
+    //const result = await this.walletUtils.connectToContract(contract.contractAddress, contract.abi);
+    //alert(result);
+
+    console.log(JSON.parse(contract.abi));
+
+    const modal = this.modalCtrl.create(ModalContractViewComponent, { contract, abi: JSON.parse(contract.abi) });
+    modal.onDidDismiss(data => {
+      this.getDeployedContracts();
+    });
+    modal.present();
 
   }
 
@@ -124,7 +135,7 @@ export class ContractsPage implements OnInit {
    * Check for transaction references stored locally with unmined status
    * @returns {Promise<void>}
    */
-  async checkUnminedTransactions(){
+  async checkUnminedTransactions() {
 
     this.deployedContracts.forEach(contract => {
       if (contract.status !== TRANSACTION_STATUS.MINED) this.checkTransactionStatus(contract);
@@ -154,10 +165,16 @@ export class ContractsPage implements OnInit {
   async openModal(contract) {
     const abi = await this.httpProvider.getContractAbi(contract.name);
     const modal = this.modalCtrl.create(ContractFormPage, { contract, abi });
+    modal.onDidDismiss(data => {
+      this.getDeployedContracts();
+    });
     modal.present();
   }
 }
 
+/**
+ * Modal component for deploying a contract
+ */
 @Component({
   templateUrl: 'contractForm.html'
 })
@@ -170,16 +187,19 @@ export class ContractFormPage {
     public viewCtrl: ViewController,
     private config: ConfigProvider,
     private httpProvider: HttpProvider,
-    private walletUtils: WalletUtilsProvider,
+    private walletUtils: WalletUtilsProvider
   ) {
+
+    console.log(this.params.get('abi'));
+
     const fields = this.params.get('abi')
       .find(item => item.type === 'constructor')
       .inputs
-        .map(field => ({
-          name: startCase(field.name),
-          type: includes(field.type, 'int') ? 'number' : 'text',
-          value: '',
-        }));
+      .map(field => ({
+        name: startCase(field.name),
+        type: includes(field.type, 'int') ? 'number' : 'text',
+        value: '',
+      }));
 
     this.contractName = this.params.get('contract').name;
     this.fields = fields;
@@ -208,7 +228,9 @@ export class ContractFormPage {
     const abiResponse = await this.httpProvider.get(abiUrl);
     const binResponse = '0x' + await this.httpProvider.get(binUrl);
 
-    await this.walletUtils.deployContract(abiResponse, binResponse, contractArgs)
+    console.log('ABI: ',JSON.parse(abiResponse));
+
+    await this.walletUtils.deployContract(abiResponse, binResponse, this.contractName, contractArgs)
       .catch((err) => {
         console.log(err);
         alert('There was a problem when deploying this contract');
@@ -217,4 +239,35 @@ export class ContractFormPage {
     this.dismiss();
     // this.getDeployedContracts();
   }
+
+  scanQr(field) {
+
+    console.log('field: ', field);
+
+    cordova.plugins.barcodeScanner.scan(
+      (result) => {
+        //if(!this.walletUtils.validateAddress(result.text)) return alert('Not a valid 0x address');
+        field.value = result.text;
+        console.log(field.value);
+      },
+      (error) => {
+        alert("Scanning failed: " + error);
+      },
+      {
+        preferFrontCamera: false, // iOS and Android
+        showFlipCameraButton: false, // iOS and Android
+        showTorchButton: false, // iOS and Android
+        torchOn: false, // Android, launch with the torch switched on (if available)
+        saveHistory: true, // Android, save scan history (default false)
+        prompt: "Place a QR inside the scan area", // Android
+        resultDisplayDuration: 100, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+        formats: "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
+        orientation: "portrait", // Android only (portrait|landscape), default unset so it rotates with the device
+        disableAnimations: true, // iOS
+        disableSuccessBeep: true // iOS and Android
+      }
+    );
+
+  }
+
 }
