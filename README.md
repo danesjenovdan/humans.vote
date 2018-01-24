@@ -43,7 +43,7 @@ Because decentralisation also means private networks and mining fees are often p
 	* enode address is exposed
 	* contract wallet is exposed
 
-## Administrator commands
+#### Administrator commands
 * Get address of own account
 ```eth.accounts[0]```
 * Check balance
