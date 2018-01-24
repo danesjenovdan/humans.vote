@@ -95,7 +95,7 @@ contract MotionVotingOrg is Organisation {
         return m.motionPassed;
     }
 
-    function calculateMotionResult(uint _motionID) public onlyMembers returns (int theResult) {
+    function calculateMotionResult(uint _motionID) public constant onlyMembers returns (int theResult) {
         Motion storage m = motions[_motionID]; // get motion
         int motionResult = 0;
 
