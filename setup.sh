@@ -1,19 +1,30 @@
 #! /bin/sh
-
-while getopts i:a:b: option
-do
-	case "${option}"
-	in
-	i) IP=${OPTARG};;
-	a) ADDRESS=${OPTARG};;
-	b) BOOTSTRAP=${OPTARG};;
-	esac
+while getopts i:a:b: option 
+do 
+  case "${option}" 
+  in 
+  i) IP=${OPTARG};; 
+  a) ADDRESS=${OPTARG};; 
+  b) BOOTSTRAP=${OPTARG};; 
+  esac 
 done
-echo $IP
-echo $ADDRESS
-echo $BOOTSTRAP
 
-
+if [ $# -eq 0 ]
+  then
+    echo "No arguments supplied"
+    echo Enter your public IP or domain: 
+	read IP
+	while [ -z ${IP} ]; do
+	     read IP
+	done
+	echo Enter your wallet address or keep empty for generating new wallet: 
+	read ADDRESS
+	echo Is tihis main node y/N: 
+	read BOOTSTRAP
+	echo $IP
+	echo $ADDRESS
+	echo $BOOTSTRAP
+fi
 # Check for ip
 if [ ! $IP  ]
   then
@@ -22,14 +33,14 @@ if [ ! $IP  ]
 fi
 
 #install packages
-apt-get update
-apt-get install software-properties-common -y
-add-apt-repository ppa:ethereum/ethereum -y
-apt-get update
-apt-get install ethereum -y
-apt-get install solc -y
-apt-get install nginx -y
-apt-get install qrencode -y
+#apt-get update
+#apt-get install software-properties-common -y
+#add-apt-repository ppa:ethereum/ethereum -y
+#apt-get update
+#apt-get install ethereum -y
+#apt-get install solc -y
+#apt-get install nginx -y
+#apt-get install qrencode -y
 
 # set or create wallet address
 if [ $ADDRESS  ]
@@ -52,7 +63,7 @@ if [ $ADDRESS  ]
 fi
 
 # run bootstrap node
-if [ $BOOTSTRAP ] && [ $ADDRESS ]
+if [ "$BOOTSTRAP" = "Y" ] || [ "$BOOTSTRAP" = "y" ]
   then
   	#generate random chainId and nonce
   	echo "set Bootstrap node"
