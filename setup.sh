@@ -32,15 +32,15 @@ if [ ! $IP  ]
     exit 1
 fi
 
-#install packages
-#apt-get update
-#apt-get install software-properties-common -y
-#add-apt-repository ppa:ethereum/ethereum -y
-#apt-get update
-#apt-get install ethereum -y
-#apt-get install solc -y
-#apt-get install nginx -y
-#apt-get install qrencode -y
+install packages
+apt-get update
+apt-get install software-properties-common -y
+add-apt-repository ppa:ethereum/ethereum -y
+apt-get update
+apt-get install ethereum -y
+apt-get install solc -y
+apt-get install nginx -y
+apt-get install qrencode -y
 
 # set or create wallet address
 if [ $ADDRESS  ]
