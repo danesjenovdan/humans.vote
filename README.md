@@ -9,9 +9,6 @@ Blockchain voting for humans
 
 [Android APK](https://github.com/danesjenovdan/humans.vote/blob/master/voter-client/android-debug.apk?raw=true)
 
-## Design documentation
-[Google Doc with stuff](https://docs.google.com/document/d/1HivUUGqH4lilm60n36SA12tUegNr2g3yyi_9uRWT29I/edit#)
-
 ## Android application
 Download the application from the github repository and install it. After running the application wallet, will be automatically generated for you, and you will be able to execute contract calls after someone gives you ether, or you get it by setting up miner.
 
