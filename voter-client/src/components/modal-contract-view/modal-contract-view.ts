@@ -69,7 +69,7 @@ export class ModalContractViewComponent {
 
     const modal = this.modalCtrl.create(ModalContractFunctionViewComponent, { abiItem: item, contract: this.contract });
     modal.onDidDismiss(data => {
-      if (data) {
+      if (data && data !== 'closed') {
         let alert = this.alertCtrl.create({
           title: 'Response',
           subTitle: data,
