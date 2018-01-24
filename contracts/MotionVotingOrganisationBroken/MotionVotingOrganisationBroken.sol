@@ -3,7 +3,7 @@ pragma solidity ^0.4.18;
 import "../utils/PrivateOrg.sol";
 
 
-contract MotionVotingOrganisationFinal is PrivateOrg {
+contract MotionVotingOrganisationBroken is PrivateOrg {
     // Contract Variables and events
     string public organisationName;
     Motion[] public motions;
@@ -48,7 +48,7 @@ contract MotionVotingOrganisationFinal is PrivateOrg {
      * Constructor function
      * Needs _organisationName
      */
-    function MotionVotingOrganisationFinal (
+    function MotionVotingOrganisationBroken (
         string _organisationName
     ) public {
         // set voting rules at contract initialisation
