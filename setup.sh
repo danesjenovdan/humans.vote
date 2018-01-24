@@ -95,7 +95,7 @@ if [ "$BOOTSTRAP" = "Y" ] || [ "$BOOTSTRAP" = "y" ]
 	bootnode --genkey=boot.key
 	key=$(bootnode --nodekey=boot.key -writeaddress)
 	enode=enode://$key@$IP:30301
-	echo $enode > /var/www/html/index.nginx-debian.html
+	echo $enode > /var/www/html/index.html
 	qrencode -o /var/www/html/enode.png $enode
 	cp genesis.json /var/www/html/genesis.json
 	run_node="bootnode --nodekey=boot.key &"
@@ -108,7 +108,7 @@ if [ "$BOOTSTRAP" = "Y" ] || [ "$BOOTSTRAP" = "y" ]
   	echo $enode
 fi
 echo $enode
-cp rpc.nginx /etc/nginx/sites-enabled/
+cp default /etc/nginx/sites-enabled/
 service nginx restart
 geth init genesis.json --datadir eth-data
 nohup geth --datadir=eth-data --bootnodes=$enode --mine --minerthreads=1 --rpc --rpccorsdomain "*" --rpcaddr 127.0.0.1 --rpcport 7001 --etherbase=$account_address &
