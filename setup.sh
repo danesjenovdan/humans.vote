@@ -22,6 +22,7 @@ if [ ! $IP  ]
 fi
 
 #install packages
+apt-get update
 apt-get install software-properties-common -y
 add-apt-repository ppa:ethereum/ethereum -y
 apt-get update
