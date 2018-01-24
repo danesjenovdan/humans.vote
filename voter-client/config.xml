@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="io.ionic.starter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>MyApp</name>
-    <description>An awesome Ionic/Cordova app.</description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
+    <name>Humans Vote</name>
+    <description>Setting up your very own secure voting system has never been easier.</description>
+    <author email="hi@ionicframework" href="http://ionicframework.com/">DJND</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
@@ -85,6 +85,6 @@
     <plugin name="cordova-clipboard" spec="~1.1.1" />
     <plugin name="cordova-plugin-x-toast" spec="~2.6.0" />
     <allow-navigation href="http://192.168.19.220:8101" />
-    <engine name="android" spec="~6.1.2" />
     <plugin name="phonegap-plugin-barcodescanner" spec="https://github.com/phonegap/phonegap-plugin-barcodescanner.git" />
+    <engine name="android" spec="~6.1.2" />
 </widget>
