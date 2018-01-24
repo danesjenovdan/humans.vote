@@ -106,8 +106,10 @@ contract MotionVotingOrganisationBroken is PrivateOrg {
         // uint optionID = findOption(_motionID, _option); // get relevant option id
 
         // create vote
-        uint voteID = m.votes.length++;
-        Vote storage v = m.votes[voteID];
+        Vote[] storage vs = m.votes;
+        uint voteID = vs.length++;
+
+        Vote storage v = vs[voteID];
         v.optionID = 0;
         v.voter = msg.sender;
 
