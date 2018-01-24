@@ -45,27 +45,6 @@ contract MotionVotingOrg is Organisation {
         numberOfMotions = 0;
     }
 
-    // function addMotion(
-    //     string _motionTitle,
-    //     string _motionAbstract,
-    //     uint _votingDeadline,
-    //     uint _minimumQuorum,
-    //     uint _majorityPercentage
-    // ) public onlyOwner returns (uint _motionID) {
-    //     uint motionID = motions.length++;
-    //     Motion storage m = motions[motionID];
-
-    //     m.motionTitle = _motionTitle;
-    //     m.motionAbstract = _motionAbstract;
-    //     m.numberOfOptions = 0;
-    //     m.votingDeadline = _votingDeadline;
-    //     m.minimumQuorum = _minimumQuorum;
-    //     m.majorityPercentage = _majorityPercentage;
-
-    //     numberOfMotions++;
-
-    //     return motionID;
-    // }
     function addBasicMotion(
         string _motionTitle,
         string _motionAbstract,
@@ -90,9 +69,28 @@ contract MotionVotingOrg is Organisation {
         return motionID;
     }
 
-    function getMotionResult(uint _motionID) public onlyMembers returns (bool theresult) {
+    function getMotionResult(uint _motionID) public constant onlyMembers returns (bool theresult) {
         Motion storage m = motions[_motionID];
         return m.motionPassed;
+    }
+
+    function getMotionTitle(uint _motionID) public constant onlyMembers returns (string theTitle) {
+        Motion storage m = motions[_motionID];
+        return m.motionTitle;
+    }
+
+    function getMotionAbstract(uint _motionID) public constant onlyMembers returns (string theAbstract) {
+        Motion storage m = motions[_motionID];
+        return m.motionAbstract;
+    }
+
+    function getMotionVotesFor(uint _motionID) public constant onlyMembers returns (int votesFor) {
+        Motion storage m = motions[_motionID];
+        uint optionID = findOption(_motionID, "for"); // get relevant option id
+
+        Option storage o = m.options[optionID];
+
+        return o.numberOfVotes;
     }
 
     function calculateMotionResult(uint _motionID) public constant onlyMembers returns (int theResult) {
@@ -115,7 +113,29 @@ contract MotionVotingOrg is Organisation {
         return motionResult;
     }
 
-    function addOption(uint motionID, string name, int voteValue, bool isVotePositive) public returns (uint optionID) {
+    function voteForMotion(uint _motionID, string _option) public onlyMembers returns (uint _voteID) {
+        Motion storage m = motions[_motionID]; // get motion
+
+        // user can only vote once
+        require(!m.voted[msg.sender]); // If has already voted, cancel
+        m.voted[msg.sender] = true; // Set this voter as having voted
+
+        uint optionID = findOption(_motionID, _option); // get relevant option id
+
+        // create vote
+        uint voteID = m.votes.length++;
+        Vote storage v = m.votes[voteID];
+        v.optionID = optionID;
+        v.voter = msg.sender;
+
+        // increase number of votes
+        Option storage o = m.options[optionID];
+        o.numberOfVotes++;
+
+        return voteID;
+    }
+
+    function addOption(uint motionID, string name, int voteValue, bool isVotePositive) private returns (uint optionID) {
         Motion storage m = motions[motionID]; // get Motion
         optionID = m.options.length++; // optionID is next option (autoincrement)
         Option storage o = m.options[optionID]; // get Option
@@ -127,23 +147,7 @@ contract MotionVotingOrg is Organisation {
         m.numberOfOptions = optionID++; // increment number of proposals
     }
 
-    function voteForMotion(uint _motionID, string _option) public onlyMembers returns (uint _voteID) {
-        Motion storage m = motions[_motionID]; // get motion
-        uint optionID = findOption(_motionID, _option);
-
-        uint voteID = m.votes.length++;
-        Vote storage v = m.votes[voteID];
-
-        v.optionID = optionID;
-        v.voter = msg.sender;
-
-        Option storage o = m.options[optionID];
-        o.numberOfVotes++;
-
-        return voteID;
-    }
-
-    function findOption(uint _motionID, string _optionString) returns (uint optionIndex) {
+    function findOption(uint _motionID, string _optionString) private returns (uint optionIndex) {
         Motion storage m = motions[_motionID]; // get motion
         for (uint i = 0; i < m.options.length; i++) {
             Option storage o = m.options[i];
@@ -155,50 +159,5 @@ contract MotionVotingOrg is Organisation {
         }
         return 404;
     }
-
-    // function voteForOption(uint optionID) public {
-    //     require(!voted[msg.sender]); // If msg.sender has already voted, cancel
-        
-    //     Option storage o = options[optionID];
-    //     voted[msg.sender] = true;
-    //     o.numberOfVotes++;
-    // }
-
-    /**
-    * Finish vote
-    *
-    * Count the votes proposal #`proposalNumber` and execute it if approved
-    *
-    * 
-    */
-    // function getMotionResult() public returns (bool motionPassed) {
-    //     uint finalResult = 0;
-    //     uint quorum;
-    //     uint winningOption;
-        
-    //     for (uint i = 0; i < options.length; i++) {
-    //         Option storage o = options[i]; // get option
-    //         quorum = o.numberOfVotes + 1;
-
-    //         if (o.isVotePositive) {
-    //             finalResult += o.voteValue * o.numberOfVotes;
-    //         } else {
-    //             finalResult -= o.voteValue * o.numberOfVotes;
-    //         }
-    //     }
-
-
-    //     require(minimumQuorum < quorum
-    //         && now > votingDeadline); // TODO majority check
-
-    //     // ...then execute result
-    //     if (finalResult > 0) {
-    //         motionPassed = true;
-    //     } else {
-    //         motionPassed = false;
-    //     }
-
-    //     return motionPassed;
-    // }
 }
 
