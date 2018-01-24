@@ -38,6 +38,8 @@ export class WalletUtilsProvider {
       name: this.config.provider.name
     });
 
+    console.log(this.provider);
+
     if (!privateKey) throw new Error('No private key when creating the wallet');
 
     if(withProvider) {
@@ -97,6 +99,8 @@ export class WalletUtilsProvider {
     try {
 
       // Notice we pass in "Hello World" as the parameter to the constructor
+      console.log(this.wallet);
+      console.log(this.provider);
       const deployTransaction = Contract.getDeployTransaction(bin, abi, ...args);
       // Send the transaction
       const contractResponse = await this.wallet.sendTransaction(deployTransaction);
