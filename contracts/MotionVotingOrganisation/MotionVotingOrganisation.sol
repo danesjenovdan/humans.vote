@@ -42,6 +42,7 @@ contract MotionVotingOrganisation is PrivateOrg {
     // events
     event OrganisationNameChanged(string organisationName);
     event MotionAdded(uint motionID);
+    event VoteSubmitted(uint voteID);
 
     /**
      * Constructor function
@@ -95,7 +96,7 @@ contract MotionVotingOrganisation is PrivateOrg {
         MotionAdded(motionID);        
     }
 
-    function voteForMotion(uint _motionID, string _option) public onlyMembers returns (uint _voteID) {
+    function voteForMotion(uint _motionID, string _option) public onlyMembers {
         Motion storage m = motions[_motionID]; // get motion
 
         // user can only vote once
@@ -114,7 +115,7 @@ contract MotionVotingOrganisation is PrivateOrg {
         Option storage o = m.options[optionID];
         o.numberOfVotes++;
 
-        return voteID;
+        VoteSubmitted(voteID);
     }
 
     function addOption(uint motionID, string name, int voteValue, bool isVotePositive) private returns (uint optionID) {
