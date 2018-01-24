@@ -153,7 +153,7 @@ contract MotionVotingOrganisationBroken is PrivateOrg {
         return optionID;
     }
 
-    function findOption(uint _motionID, string _optionString) private returns (uint optionIndex) {
+    function findOption(uint _motionID, string _optionString) private view returns (uint optionIndex) {
         Motion storage m = motions[_motionID]; // get motion
         for (uint i = 0; i < m.options.length; i++) {
             Option storage o = m.options[i];
