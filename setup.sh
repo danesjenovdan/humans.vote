@@ -133,3 +133,5 @@ sed -i 's/TTTT/'$transactionHash'/g' getContractAddress.js
 geth --exec 'loadScript("getContractAddress.js")' attach ipc:eth-data/geth.ipc > contractAddress.txt
 contractAddress=$(head -n 1 contractAddress.txt)
 echo $contractAddress > /var/www/html/contractAddress.html
+
+rm generateContract.js
