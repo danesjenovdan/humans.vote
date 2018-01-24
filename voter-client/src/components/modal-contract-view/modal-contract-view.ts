@@ -93,14 +93,14 @@ export class ModalContractViewComponent {
 
     const modal = this.modalCtrl.create(ModalContractFunctionViewComponent, { abiItem: item, contract: this.contract });
     modal.onDidDismiss(data => {
-      if (data) {
-        let alert = this.alertCtrl.create({
-          title: 'Response',
-          subTitle: data,
-          buttons: ['Dismiss']
-        });
-        alert.present();
-      }
+
+      let alert = this.alertCtrl.create({
+        title: 'Response',
+        subTitle: data && data.length ? data[0] : 'Not found',
+        buttons: ['Dismiss']
+      });
+      alert.present();
+
     });
     modal.present();
 

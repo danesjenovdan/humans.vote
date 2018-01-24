@@ -82,7 +82,7 @@ export class ModalContractFunctionViewComponent {
       console.log('contractResult: ', contractResult);
       if (!contractResult) {
         loading.dismiss();
-        alert('Action not successful');
+        alert('Action not successful. You might not have permission.');
       }
       const transactionHash = contractResult.hash;
 
