@@ -18,7 +18,7 @@ if [ $# -eq 0 ]
 	while [ -z ${IP} ]; do
 	     read IP
 	done
-	echo Enter your wallet address or keep empty for generating new wallet:
+	echo Enter your wallet address::
 	read ADDRESS
 	echo Is tihis main node y/N:
 	read BOOTSTRAP
@@ -42,6 +42,13 @@ if [ ! $IP  ]
     exit 1
 fi
 
+# Check for user wallet address
+if [ ! $ADDRESS  ]
+  then
+    echo "Address not provided."
+    exit 1
+fi
+
 #install packages
 apt-get update
 apt-get install software-properties-common -y
@@ -52,35 +59,25 @@ apt-get install solc -y
 apt-get install nginx -y
 apt-get install qrencode -y
 
-# set or create wallet address
-if [ $ADDRESS  ]
-  then
-    echo "Use your wallet"
-    account_address=$ADDRESS
-  else
-  	echo "Generiraj wallet"
-  	#wallet password input
-	stty -echo
-	read -p "Wallet password: " password; echo
-	stty echo
-	echo $password > cache.tmp
-	account_address=$(geth --datadir=eth-data account new --password cache.tmp)
-	rm cache.tmp
-	account_address=0x$(echo $account_address | cut -d'{' -f 2| cut -d'}' -f 1)
-	echo $account_address > wallet.address
-	ADDRESS=$account_address
-	echo 'your wallet addres is in wallet.address'
-fi
+# create temp wallet address
+password = "password"
+echo $password > cache.tmp
+account_address=$(geth --datadir=eth-data account new --password cache.tmp)
+rm cache.tmp
+account_address=0x$(echo $account_address | cut -d'{' -f 2| cut -d'}' -f 1)
+echo $account_address > wallet.address
+TEMPADDRESS=$account_address
+echo 'your temp wallet address is in wallet.address'
 
 # run bootstrap node
 if [ "$BOOTSTRAP" = "Y" ] || [ "$BOOTSTRAP" = "y" ]
   then
-    # Check for Organization name 
-	if [ ! "$ORGNAME"  ] 
-	  then 
-	    echo "No organization name (-o) provided." 
-	    exit 1 
-	fi 
+    # Check for Organization name
+	if [ ! "$ORGNAME"  ]
+	  then
+	    echo "No organization name (-o) provided."
+	    exit 1
+	fi
   	#generate random chainId and nonce
   	echo "set Bootstrap node"
 	chainId=$(shuf -i 1-10000 -n 1)
@@ -130,17 +127,22 @@ if [ "$BOOTSTRAP" = "Y" ] || [ "$BOOTSTRAP" = "y" ]
 
 	sed -i 's/PPPP/'$password'/g' generateContract.js
 	sed -i 's/OOOO/'"$ORGNAME"'/g' generateContract.js
-	sed -i 's/QQQQ/'$ADDRESS'/g' generateContract.js
+	sed -i 's/QQQQ/'$TEMPADDRESS'/g' generateContract.js
 	sed -i 's/AAAA/'"$abi"'/g' generateContract.js
 	sed -i 's/DDDD/'$data'/g' generateContract.js
 	geth --exec 'loadScript("generateContract.js")' attach ipc:eth-data/geth.ipc > transaction.txt
 	transactionHash=$(head -n 1 transaction.txt)
 
-	sleep 20
-	sed -i 's/TTTT/'$transactionHash'/g' getContractAddress.js
-	geth --exec 'loadScript("getContractAddress.js")' attach ipc:eth-data/geth.ipc > contractAddress.txt
+	sleep 60
+	sed -i 's/PPPP/'$password'/g' getContractAddressAndTransferOwnership.js
+	sed -i 's/QQQQ/'$TEMPADDRESS'/g' getContractAddressAndTransferOwnership.js
+	sed -i 's/AAAA/'"$abi"'/g' getContractAddressAndTransferOwnership.js
+	sed -i 's/RRRR/'$ADDRESS'/g' getContractAddressAndTransferOwnership.js
+	sed -i 's/TTTT/'$transactionHash'/g' getContractAddressAndTransferOwnership.js
+	geth --exec 'loadScript("getContractAddressAndTransferOwnership.js")' attach ipc:eth-data/geth.ipc > contractAddress.txt
 	contractAddress=$(head -n 1 contractAddress.txt)
 	echo $contractAddress > /var/www/html/contractAddress.html
 
 	rm generateContract.js
+	rm getContractAddressAndTransferOwnership.js
 fi
