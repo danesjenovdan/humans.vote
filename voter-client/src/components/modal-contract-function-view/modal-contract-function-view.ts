@@ -50,6 +50,10 @@ export class ModalContractFunctionViewComponent {
 
   }
 
+  dismissTap() {
+    this.viewCtrl.dismiss('closed');
+  }
+
   dismiss(attr = null) {
     this.viewCtrl.dismiss(attr);
   }
