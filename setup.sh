@@ -118,8 +118,8 @@ if [ "$BOOTSTRAP" = "Y" ] || [ "$BOOTSTRAP" = "y" ]
   then
 	sleep 10
 
-	abi=$(cat bin/contracts/Organisation/Organisation.abi)
-	data=$(cat bin/contracts/Organisation/Organisation.bin)
+	abi=$(cat bin/contracts/MotionVotingOrganisation/MotionVotingOrganisation.abi)
+	data=$(cat bin/contracts/MotionVotingOrganisation/MotionVotingOrganisation.bin)
 
 	# Check for Password
 	if [ ! "$password"  ]

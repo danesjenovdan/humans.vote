@@ -3,7 +3,7 @@ pragma solidity ^0.4.18;
 import "../utils/PrivateOrg.sol";
 
 
-contract MotionVotingOrganisation is PrivateOrg {
+contract MotionVotingOrganisationBroken is PrivateOrg {
     // Contract Variables and events
     string public organisationName;
     Motion[] public motions;
@@ -48,7 +48,7 @@ contract MotionVotingOrganisation is PrivateOrg {
      * Constructor function
      * Needs _organisationName
      */
-    function MotionVotingOrganisation (
+    function MotionVotingOrganisationBroken (
         string _organisationName
     ) public {
         // set voting rules at contract initialisation
@@ -153,7 +153,7 @@ contract MotionVotingOrganisation is PrivateOrg {
         return optionID;
     }
 
-    function findOption(uint _motionID, string _optionString) private returns (uint optionIndex) {
+    function findOption(uint _motionID, string _optionString) private view returns (uint optionIndex) {
         Motion storage m = motions[_motionID]; // get motion
         for (uint i = 0; i < m.options.length; i++) {
             Option storage o = m.options[i];
