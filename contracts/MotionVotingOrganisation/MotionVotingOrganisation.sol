@@ -100,8 +100,8 @@ contract MotionVotingOrganisation is PrivateOrg {
         Motion storage m = motions[_motionID]; // get motion
 
         // user can only vote once
-        require(!m.voted[msg.sender]); // If has already voted, cancel
-        m.voted[msg.sender] = true; // Set this voter as having voted
+        // require(!m.voted[msg.sender]); // If has already voted, cancel
+        // m.voted[msg.sender] = true; // Set this voter as having voted
 
         uint optionID = findOption(_motionID, _option); // get relevant option id
 
