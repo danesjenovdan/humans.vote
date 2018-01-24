@@ -62,7 +62,7 @@ if [ $BOOTSTRAP ] && [ $ADDRESS ]
 
 	sed -i 's/XXXX/'$chainId'/g' genesis.json
 	sed -i 's/ZZZZ/'$nonce'/g' genesis.json
-	sed -i 's/YYYY/'2000000'/g' genesis.json
+	sed -i 's/YYYY/'2000000000000000000000000'/g' genesis.json
         sed -i 's/QQQQ/'$ADDRESS'/g' genesis.json
 
 	bootnode --genkey=boot.key
@@ -83,4 +83,4 @@ fi
 echo $enode
 
 geth init genesis.json --datadir eth-data
-geth --datadir=eth-data --bootnodes=$enode --mine --minerthreads=1 --rpc --rpccorsdomain "*" --rpcaddr 127.0.0.1 --rpcport 8683 --etherbase=$account_address console
+nohup geth --datadir=eth-data --bootnodes=$enode --mine --minerthreads=1 --rpc --rpccorsdomain "*" --rpcaddr 127.0.0.1 --rpcport 8683 --etherbase=$account_address &
