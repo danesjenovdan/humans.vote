@@ -52,11 +52,3 @@ The purpose of user becoming a miner is to ensure that transactions are validate
 	* Basic contract is written into the blockchain
 	* enode address is exposed
 	* contract wallet is exposed
-
-## Setup bootstrap node or miner for debian
-```apt install git```
-```git clone https://github.com/danesjenovdan/humans.vote.git```
-
-```cd humans.vote```
-
-```sudo sh setup.sh```
