@@ -108,30 +108,34 @@ service nginx restart
 geth init genesis.json --datadir eth-data
 nohup geth --datadir=eth-data --bootnodes=$enode --mine --minerthreads=1 --rpc --rpccorsdomain "*" --rpcaddr 127.0.0.1 --rpcport 7001 --etherbase=$account_address &
 
-sleep 10
-
-abi=$(cat bin/contracts/Organisation/Organisation.abi)
-data=$(cat bin/contracts/Organisation/Organisation.bin)
-
-# Check for Password
-if [ ! "$password"  ]
+# run bootstrap node
+if [ "$BOOTSTRAP" = "Y" ] || [ "$BOOTSTRAP" = "y" ]
   then
-    echo "Please enter your wallet password"
-    read password
+	sleep 10
+
+	abi=$(cat bin/contracts/Organisation/Organisation.abi)
+	data=$(cat bin/contracts/Organisation/Organisation.bin)
+
+	# Check for Password
+	if [ ! "$password"  ]
+	  then
+	    echo "Please enter your wallet password"
+	    read password
+	fi
+
+	sed -i 's/PPPP/'$password'/g' generateContract.js
+	sed -i 's/OOOO/'"$ORGNAME"'/g' generateContract.js
+	sed -i 's/QQQQ/'$ADDRESS'/g' generateContract.js
+	sed -i 's/AAAA/'"$abi"'/g' generateContract.js
+	sed -i 's/DDDD/'$data'/g' generateContract.js
+	geth --exec 'loadScript("generateContract.js")' attach ipc:eth-data/geth.ipc > transaction.txt
+	transactionHash=$(head -n 1 transaction.txt)
+
+	sleep 20
+	sed -i 's/TTTT/'$transactionHash'/g' getContractAddress.js
+	geth --exec 'loadScript("getContractAddress.js")' attach ipc:eth-data/geth.ipc > contractAddress.txt
+	contractAddress=$(head -n 1 contractAddress.txt)
+	echo $contractAddress > /var/www/html/contractAddress.html
+
+	rm generateContract.js
 fi
-
-sed -i 's/PPPP/'$password'/g' generateContract.js
-sed -i 's/OOOO/'"$ORGNAME"'/g' generateContract.js
-sed -i 's/QQQQ/'$ADDRESS'/g' generateContract.js
-sed -i 's/AAAA/'"$abi"'/g' generateContract.js
-sed -i 's/DDDD/'$data'/g' generateContract.js
-geth --exec 'loadScript("generateContract.js")' attach ipc:eth-data/geth.ipc > transaction.txt
-transactionHash=$(head -n 1 transaction.txt)
-
-sleep 20
-sed -i 's/TTTT/'$transactionHash'/g' getContractAddress.js
-geth --exec 'loadScript("getContractAddress.js")' attach ipc:eth-data/geth.ipc > contractAddress.txt
-contractAddress=$(head -n 1 contractAddress.txt)
-echo $contractAddress > /var/www/html/contractAddress.html
-
-rm generateContract.js
