@@ -20,14 +20,20 @@
         <div *ngFor="let field of inputs" style="display: flex;">
             <ion-item item-left style="flex-grow: 2">
                 <ion-label floating>
-                    {{ field.name }} ({{field.type}} {{field.type === 'address'?', without 0x!':''}})
+                    {{ field.name }} ({{field.type}} {{getTitleLabel(field.type)}})
                 </ion-label>
                 <ion-input
+                        *ngIf="field.type !== 'bool'"
                         [type]="field.type === 'uint256'?'number':'string'"
                         [(ngModel)]="field.value"></ion-input>
+                <ion-select *ngIf="field.type === 'bool'" [(ngModel)]="field.value">
+                    <ion-option value="yes">Yes</ion-option>
+                    <ion-option value="no">No</ion-option>
+                </ion-select>
             </ion-item>
             <div style="flex-grow: 1">
                 <button style="width:40px; height:40px; padding:0; margin-bottom:-60px;"
+                        *ngIf="field.type !== 'bool'"
                         small
                         ion-button
                         (click)="scanQr(field)"

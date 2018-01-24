@@ -73,6 +73,7 @@
                 <button ion-button=""
                         item-end=""
                         outline=""
+                        *ngIf="contract.name !== 'DemoVoting'"
                         (click)="removeContractTap(contract)"
                         class="disable-hover item-button button button-ios button-outline button-outline-ios">
                     <span class="button-inner">Remove</span>

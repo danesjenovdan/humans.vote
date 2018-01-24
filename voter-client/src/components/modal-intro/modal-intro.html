@@ -33,7 +33,7 @@
                             <ion-toggle [(ngModel)]="demoWallet"></ion-toggle>
                         </ion-item>
                     </ion-list>
-                    <p *ngIf="demoWallet" class="label-ios-primary" style="font-size:12px;">This will change your wallet address. You can check it out in the profile page later.</p>
+                    <p *ngIf="demoWallet" class="label-ios-primary" style="font-size:12px;">Using the demo wallet will change your wallet address. You can check it out in the profile page later.</p>
                     <button (click)="rpcDoneTap()" ion-button block>Set url and continue</button>
                 </div>
                 <div *ngIf="page === 'ADMIN'">

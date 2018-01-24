@@ -23,7 +23,7 @@ export class HttpProvider {
    * @returns {Promise<Object>}
    */
   getContracts() {
-    return this.http.get('https://api.github.com/repos/danesjenovdan/humans.vote/contents/bin/contracts').toPromise();
+    return this.http.get('https://api.github.com/repos/danesjenovdan/humans.vote/contents/bin/contracts?tesst=12').toPromise();
   }
 
   /**
@@ -32,7 +32,7 @@ export class HttpProvider {
    * @returns {Promise<any>}
    */
   getContractAbi(contractName): Promise<any> {
-    return this.http.get(`${this.config.contractsUrl}${contractName}/${contractName}.abi?troaaslo=true`).toPromise();
+    return this.http.get(`${this.config.contractsUrl}${contractName}/${contractName}.abi?aaasa=true`).toPromise();
   }
 
   /**
@@ -41,7 +41,7 @@ export class HttpProvider {
    * @returns {Promise<string>}
    */
   get(url): Promise<string> {
-    return this.http.get(url+'?troasalo=true', { responseType: 'text' }).toPromise();
+    return this.http.get(url+'?aaasa=true', { responseType: 'text' }).toPromise();
   }
 
 }

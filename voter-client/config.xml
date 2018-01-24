@@ -85,6 +85,6 @@
     <plugin name="cordova-clipboard" spec="~1.1.1" />
     <plugin name="cordova-plugin-x-toast" spec="~2.6.0" />
     <allow-navigation href="http://192.168.19.220:8101" />
-    <plugin name="phonegap-plugin-barcodescanner" spec="https://github.com/phonegap/phonegap-plugin-barcodescanner.git" />
     <engine name="android" spec="~6.1.2" />
+    <plugin name="phonegap-plugin-barcodescanner" spec="https://github.com/phonegap/phonegap-plugin-barcodescanner.git" />
 </widget>

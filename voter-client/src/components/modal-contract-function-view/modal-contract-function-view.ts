@@ -7,6 +7,7 @@ import { IContract } from '../modal-contract-view/modal-contract-view';
 import { includes, startCase } from 'lodash';
 import * as InputDataDecoder from 'ethereum-input-data-decoder';
 import * as abiDecoder from 'abi-decoder';
+import { AlertController } from 'ionic-angular';
 
 declare var cordova;
 
@@ -29,7 +30,8 @@ export class ModalContractFunctionViewComponent {
     private httpProvider: HttpProvider,
     private walletUtils: WalletUtilsProvider,
     private modalCtrl: ModalController,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private alertCtrl: AlertController
   ) {
 
     this.contract = this.params.get('contract');
@@ -54,22 +56,22 @@ export class ModalContractFunctionViewComponent {
 
   async submit() {
 
+    // check for missing fields
     const missingFields = this.inputs.filter(input => !input.value);
 
+    // throw error if fields are missing
     if (missingFields.length) return alert('Some fields are empty');
 
+    // map attributes
     let attributes = this.inputs.map(input => input.value) as any[];
 
-//    attributes = attributes.map(arg => !isNaN(arg) ? Number(arg) : arg) as any[];
-
-    console.log('this.contract.contractAddress: ', this.contract.contractAddress);
-    console.log('this.contract.abi: ', this.contract.abi);
-    console.log('this.abiItem.functionName: ', this.abiItem.functionName);
-    console.log('attributes: ', attributes);
-
+    // set UI state to submitting
     this.submitting = true;
+
+    // setup contract
     const contractResult = await this.walletUtils.connectToContract(this.contract.contractAddress, this.contract.abi, this.abiItem.functionName, attributes);
 
+    // create UI loader
     let loading = this.loadingCtrl.create({
       content: 'Please wait... (mining)'
     });
@@ -78,18 +80,36 @@ export class ModalContractFunctionViewComponent {
     if (this.abiItem.setter) {
 
       console.log('contractResult: ', contractResult);
+      if (!contractResult) {
+        loading.dismiss();
+        alert('Action not successful');
+      }
       const transactionHash = contractResult.hash;
 
       // Get notified when a transaction is mined
-      this.walletUtils.provider.once(transactionHash, (transaction) => {
+      this.walletUtils.provider.once(transactionHash, async (transaction) => {
 
-        const data = transaction.data.slice(2);
+        if (this.title === 'Get Proposal Results') {
+          const contractResult = await this.walletUtils.connectToContract(this.contract.contractAddress, this.contract.abi, 'proposals', attributes);
+          const votesFor = await this.walletUtils.connectToContract(this.contract.contractAddress, this.contract.abi, 'getNumberOfVotesForProposal', attributes);
+          const votesAgainst = await this.walletUtils.connectToContract(this.contract.contractAddress, this.contract.abi, 'getNumberOfVotesAgainstProposal', attributes);
+          console.log('votesFor: ', votesFor);
+          console.log('votesAgainst: ', votesAgainst);
+          let alert = this.alertCtrl.create({
+            title: 'Current voting result',
+            subTitle: (contractResult[1] === true ? 'Vote passed' : 'Vote failed') + `<br/> For : ${votesFor} | Against : ${votesAgainst}`,
+            buttons: ['Dismiss']
+          });
+          alert.present();
+          loading.dismiss();
+          this.dismiss();
+        } else {
 
-        this.submitting = false;
-        console.log('transaction: ', transaction);
-        console.log('data: ', data);
-        loading.dismiss();
-        this.dismiss();
+          this.submitting = false;
+          loading.dismiss();
+          this.dismiss();
+
+        }
 
       });
 
@@ -127,6 +147,16 @@ export class ModalContractFunctionViewComponent {
         disableSuccessBeep: true // iOS and Android
       }
     );
+
+  }
+
+  getTitleLabel(type) {
+
+    if (type === 'address') {
+      return ', without 0x!';
+    } else if (type === 'bool') {
+      return ', yes/no';
+    }
 
   }
 

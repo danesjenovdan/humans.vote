@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
+import { ConfigProvider } from '../config/config';
 
 /*
   Generated class for the StorageProvider provider.
@@ -10,7 +11,7 @@ import { Storage } from '@ionic/storage';
 @Injectable()
 export class StorageProvider {
 
-  constructor(private storage: Storage) {
+  constructor(private storage: Storage, private config: ConfigProvider) {
 
   }
 
@@ -52,7 +53,11 @@ export class StorageProvider {
    */
   async getDeployedTransactions(): Promise<Array<ITransaction>> {
 
-    return await this.storage.get('contracts') || [] as ITransaction[];
+    const contracts = await this.storage.get('contracts') || [] as ITransaction[];
+
+    console.log('contracts: ',contracts);
+
+    return contracts;
 
   }
 
@@ -75,6 +80,25 @@ export class StorageProvider {
 
   }
 
+  async seedContracts() {
+
+    console.log('this.config.demoContracts: ',this.config.demoContracts);
+    return this.storage.set('contracts', this.config.demoContracts);
+
+  }
+
+  async setInitialized() {
+
+    return this.storage.set('initialized', true);
+
+  }
+
+  async getInitialized() {
+
+    return this.storage.get('initialized');
+
+  }
+
   /**
    * Update transaction status
    * @param {string} hash
@@ -90,7 +114,7 @@ export class StorageProvider {
 
     if (!contract) return null;
 
-    if(status) {
+    if (status) {
       contract.status = status;
     }
     contract.contractAddress = address;
@@ -108,8 +132,8 @@ export class StorageProvider {
 
     const contracts = await this.getDeployedTransactions();
 
-    contracts.forEach((contract,i) => {
-      if(contract.hash === hash) contracts.splice(i,1);
+    contracts.forEach((contract, i) => {
+      if (contract.hash === hash) contracts.splice(i, 1);
     });
 
     return this.storage.set('contracts', contracts);

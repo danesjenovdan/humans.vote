@@ -193,6 +193,14 @@ export class WalletUtilsProvider {
       console.log('method: ', method);
 
       args = args.map(arg => !isNaN(arg) ? Number(arg) : arg);
+      args = args.map(arg => {
+        if(arg === 'yes'){
+          return true;
+        }else if(arg === 'no'){
+          return false;
+        }
+        return arg;
+      });
 
       console.log('args: ', args);
 

@@ -42,6 +42,14 @@ export class TabsPage {
 
       }
 
+      const initialized = await this.storage.getInitialized();
+
+      if(!initialized){
+        await this.storage.seedContracts();
+      }
+
+      await this.storage.setInitialized();
+
       // if it's not set open an intro modal where it needs to be entered
       let profileModal = this.modalCtrl.create(ModalIntroComponent);
       profileModal.onDidDismiss(data => {

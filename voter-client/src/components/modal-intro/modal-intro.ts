@@ -18,8 +18,9 @@ export class ModalIntroComponent implements OnInit {
   address: string;
   page: string = 'WALLET';
   isAdmin = false;
-  demoWallet = false;
+  demoWallet = true;
   enableDemoWallet = true;
+
 
   constructor(
     private walletUtils: WalletUtilsProvider,
