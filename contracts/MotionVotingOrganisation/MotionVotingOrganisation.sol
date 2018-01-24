@@ -10,6 +10,7 @@ contract MotionVotingOrganisation is PrivateOrg {
     Motion[] public motions;
     uint public numberOfMotions;
 
+    // STRUCTS
     // motion "object structure
     struct Motion {
         string motionTitle;
@@ -32,6 +33,7 @@ contract MotionVotingOrganisation is PrivateOrg {
         int numberOfVotes;
     }
 
+    // vote "object" structure
     struct Vote {
         uint optionID;
         address voter;
@@ -39,6 +41,7 @@ contract MotionVotingOrganisation is PrivateOrg {
     
     // events
     event OrganisationNameChanged(string organisationName);
+    event MotionAdded(uint motionID);
 
     /**
      * Constructor function
@@ -67,5 +70,43 @@ contract MotionVotingOrganisation is PrivateOrg {
         OrganisationNameChanged(newOrganisationName);
     }
 
+    function addBasicMotion(
+        string _motionTitle,
+        string _motionAbstract,
+        uint _daysForDeliberation
+    ) public onlyOwner {
+        uint motionID = motions.length++;
+        Motion storage m = motions[motionID];
+
+        m.motionTitle = _motionTitle;
+        m.motionAbstract = _motionAbstract;
+        m.numberOfOptions = 0;
+        m.votingDeadline = _daysForDeliberation;
+        m.minimumQuorum = 0;
+        m.majorityPercentage = 51;
+
+        addOption(motionID, "for", 1, true);
+        addOption(motionID, "against", 1, false);
+        addOption(motionID, "abstain", 0, true);
+
+        numberOfMotions++;
+
+        // fire event
+        MotionAdded(motionID);        
+    }
+
+    function addOption(uint motionID, string name, int voteValue, bool isVotePositive) private returns (uint optionID) {
+        Motion storage m = motions[motionID]; // get Motion
+        optionID = m.options.length++; // optionID is next option (autoincrement)
+        Option storage o = m.options[optionID]; // get Option
+        o.name = name;
+        o.voteValue = voteValue;
+        o.isVotePositive = isVotePositive;
+        o.numberOfVotes = 0;
+
+        m.numberOfOptions = optionID++; // increment number of proposals
+
+        return optionID;
+    }
     
 }
