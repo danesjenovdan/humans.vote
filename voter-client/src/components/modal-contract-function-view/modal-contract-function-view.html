@@ -33,7 +33,7 @@
             </ion-item>
             <div style="flex-grow: 1">
                 <button style="width:40px; height:40px; padding:0; margin-bottom:-60px;"
-                        *ngIf="field.type === 'bool'"
+                        *ngIf="field.type !== 'bool'"
                         small
                         ion-button
                         (click)="scanQr(field)"
