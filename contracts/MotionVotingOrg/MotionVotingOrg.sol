@@ -65,119 +65,119 @@ contract MotionVotingOrg is PrivateOrg {
         OrganisationNameChanged(newOrganisationName);
     }
 
-    function addBasicMotion(
-        string _motionTitle,
-        string _motionAbstract,
-        uint _daysForDeliberation
-    ) public onlyOwner returns (uint _motionID) {
-        uint motionID = motions.length++;
-        Motion storage m = motions[motionID];
+    // function addBasicMotion(
+    //     string _motionTitle,
+    //     string _motionAbstract,
+    //     uint _daysForDeliberation
+    // ) public onlyOwner returns (uint _motionID) {
+    //     uint motionID = motions.length++;
+    //     Motion storage m = motions[motionID];
 
-        m.motionTitle = _motionTitle;
-        m.motionAbstract = _motionAbstract;
-        m.numberOfOptions = 0;
-        m.votingDeadline = _daysForDeliberation;
-        m.minimumQuorum = 0;
-        m.majorityPercentage = 51;
+    //     m.motionTitle = _motionTitle;
+    //     m.motionAbstract = _motionAbstract;
+    //     m.numberOfOptions = 0;
+    //     m.votingDeadline = _daysForDeliberation;
+    //     m.minimumQuorum = 0;
+    //     m.majorityPercentage = 51;
 
-        addOption(motionID, "for", 1, true);
-        addOption(motionID, "against", 1, false);
-        addOption(motionID, "abstain", 0, true);
+    //     addOption(motionID, "for", 1, true);
+    //     addOption(motionID, "against", 1, false);
+    //     addOption(motionID, "abstain", 0, true);
 
-        numberOfMotions++;
+    //     numberOfMotions++;
 
-        return motionID;
-    }
+    //     return motionID;
+    // }
 
-    function getMotionResult(uint _motionID) public constant onlyMembers returns (bool theresult) {
-        Motion storage m = motions[_motionID];
-        return m.motionPassed;
-    }
+    // function getMotionResult(uint _motionID) public constant onlyMembers returns (bool theresult) {
+    //     Motion storage m = motions[_motionID];
+    //     return m.motionPassed;
+    // }
 
-    function getMotionTitle(uint _motionID) public constant onlyMembers returns (string theTitle) {
-        Motion storage m = motions[_motionID];
-        return m.motionTitle;
-    }
+    // function getMotionTitle(uint _motionID) public constant onlyMembers returns (string theTitle) {
+    //     Motion storage m = motions[_motionID];
+    //     return m.motionTitle;
+    // }
 
-    function getMotionAbstract(uint _motionID) public constant onlyMembers returns (string theAbstract) {
-        Motion storage m = motions[_motionID];
-        return m.motionAbstract;
-    }
+    // function getMotionAbstract(uint _motionID) public constant onlyMembers returns (string theAbstract) {
+    //     Motion storage m = motions[_motionID];
+    //     return m.motionAbstract;
+    // }
 
-    function getMotionVotesFor(uint _motionID) public constant onlyMembers returns (int votesFor) {
-        Motion storage m = motions[_motionID];
-        uint optionID = findOption(_motionID, "for"); // get relevant option id
+    // function getMotionVotesFor(uint _motionID) public constant onlyMembers returns (int votesFor) {
+    //     Motion storage m = motions[_motionID];
+    //     uint optionID = findOption(_motionID, "for"); // get relevant option id
 
-        Option storage o = m.options[optionID];
+    //     Option storage o = m.options[optionID];
 
-        return o.numberOfVotes;
-    }
+    //     return o.numberOfVotes;
+    // }
 
-    function calculateMotionResult(uint _motionID) public constant onlyMembers returns (int theResult) {
-        Motion storage m = motions[_motionID]; // get motion
-        int motionResult = 0;
+    // function calculateMotionResult(uint _motionID) public constant onlyMembers returns (int theResult) {
+    //     Motion storage m = motions[_motionID]; // get motion
+    //     int motionResult = 0;
 
-        for (uint i = 0; i < m.options.length; i++) {
-            Option storage o = m.options[i];
-            if (o.isVotePositive) {
-                motionResult += o.numberOfVotes * o.voteValue;
-            } else {
-                motionResult -= o.numberOfVotes * o.voteValue;
-            }
-        }
+    //     for (uint i = 0; i < m.options.length; i++) {
+    //         Option storage o = m.options[i];
+    //         if (o.isVotePositive) {
+    //             motionResult += o.numberOfVotes * o.voteValue;
+    //         } else {
+    //             motionResult -= o.numberOfVotes * o.voteValue;
+    //         }
+    //     }
 
-        if (motionResult > 0) {
-            m.motionPassed = true;
-        }
+    //     if (motionResult > 0) {
+    //         m.motionPassed = true;
+    //     }
 
-        return motionResult;
-    }
+    //     return motionResult;
+    // }
 
-    function voteForMotion(uint _motionID, string _option) public onlyMembers returns (uint _voteID) {
-        Motion storage m = motions[_motionID]; // get motion
+    // function voteForMotion(uint _motionID, string _option) public onlyMembers returns (uint _voteID) {
+    //     Motion storage m = motions[_motionID]; // get motion
 
-        // user can only vote once
-        require(!m.voted[msg.sender]); // If has already voted, cancel
-        m.voted[msg.sender] = true; // Set this voter as having voted
+    //     // user can only vote once
+    //     require(!m.voted[msg.sender]); // If has already voted, cancel
+    //     m.voted[msg.sender] = true; // Set this voter as having voted
 
-        uint optionID = findOption(_motionID, _option); // get relevant option id
+    //     uint optionID = findOption(_motionID, _option); // get relevant option id
 
-        // create vote
-        uint voteID = m.votes.length++;
-        Vote storage v = m.votes[voteID];
-        v.optionID = optionID;
-        v.voter = msg.sender;
+    //     // create vote
+    //     uint voteID = m.votes.length++;
+    //     Vote storage v = m.votes[voteID];
+    //     v.optionID = optionID;
+    //     v.voter = msg.sender;
 
-        // increase number of votes
-        Option storage o = m.options[optionID];
-        o.numberOfVotes++;
+    //     // increase number of votes
+    //     Option storage o = m.options[optionID];
+    //     o.numberOfVotes++;
 
-        return voteID;
-    }
+    //     return voteID;
+    // }
 
-    function addOption(uint motionID, string name, int voteValue, bool isVotePositive) private returns (uint optionID) {
-        Motion storage m = motions[motionID]; // get Motion
-        optionID = m.options.length++; // optionID is next option (autoincrement)
-        Option storage o = m.options[optionID]; // get Option
-        o.name = name;
-        o.voteValue = voteValue;
-        o.isVotePositive = isVotePositive;
-        o.numberOfVotes = 0;
+    // function addOption(uint motionID, string name, int voteValue, bool isVotePositive) private returns (uint optionID) {
+    //     Motion storage m = motions[motionID]; // get Motion
+    //     optionID = m.options.length++; // optionID is next option (autoincrement)
+    //     Option storage o = m.options[optionID]; // get Option
+    //     o.name = name;
+    //     o.voteValue = voteValue;
+    //     o.isVotePositive = isVotePositive;
+    //     o.numberOfVotes = 0;
 
-        m.numberOfOptions = optionID++; // increment number of proposals
-    }
+    //     m.numberOfOptions = optionID++; // increment number of proposals
+    // }
 
-    function findOption(uint _motionID, string _optionString) private returns (uint optionIndex) {
-        Motion storage m = motions[_motionID]; // get motion
-        for (uint i = 0; i < m.options.length; i++) {
-            Option storage o = m.options[i];
-            string storage optionName = o.name;
-            if (keccak256(optionName) == keccak256(_optionString)) {
-                return i;
-            }
+    // function findOption(uint _motionID, string _optionString) private returns (uint optionIndex) {
+    //     Motion storage m = motions[_motionID]; // get motion
+    //     for (uint i = 0; i < m.options.length; i++) {
+    //         Option storage o = m.options[i];
+    //         string storage optionName = o.name;
+    //         if (keccak256(optionName) == keccak256(_optionString)) {
+    //             return i;
+    //         }
 
-        }
-        return 404;
-    }
+    //     }
+    //     return 404;
+    // }
 }
 
