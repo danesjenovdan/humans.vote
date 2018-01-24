@@ -43,7 +43,7 @@ contract MotionVotingOrganisation is PrivateOrg {
     event OrganisationNameChanged(string organisationName);
     event MotionAdded(uint motionID);
     // event VoteSubmitted(uint voteID);
-    // event MotionResultCalculated(uint motionID);
+    event MotionResultCalculated(int result);
 
     /**
      * Constructor function
@@ -95,6 +95,26 @@ contract MotionVotingOrganisation is PrivateOrg {
 
         // fire event
         MotionAdded(motionID);
+    }
+
+    function calculateMotionResult(uint _motionID) public onlyMembers {
+        Motion storage m = motions[_motionID]; // get motion
+        int motionResult = 0;
+
+        for (uint i = 0; i < m.options.length; i++) {
+            Option storage o = m.options[i];
+            if (o.isVotePositive) {
+                motionResult += o.numberOfVotes * o.voteValue;
+            } else {
+                motionResult -= o.numberOfVotes * o.voteValue;
+            }
+        }
+
+        if (motionResult > 0) {
+            m.motionPassed = true;
+        }
+
+        MotionResultCalculated(motionResult);
     }
 
     function addOption(uint motionID, string name, int voteValue, bool isVotePositive) private returns (uint optionID) {
