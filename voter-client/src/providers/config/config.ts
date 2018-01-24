@@ -14,8 +14,8 @@ export class ConfigProvider {
   port: number = 8683;
 
   provider = {
-    url: 'http://localhost:8545',
-    chainId: 2114,
+    url: 'http://51.15.206.108:8683',
+    chainId: 8692,
     name: 'humansvote',
   };
 
