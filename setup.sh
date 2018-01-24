@@ -1,34 +1,45 @@
 #! /bin/sh
-while getopts i:a:b: option 
-do 
-  case "${option}" 
-  in 
-  i) IP=${OPTARG};; 
-  a) ADDRESS=${OPTARG};; 
-  b) BOOTSTRAP=${OPTARG};; 
-  esac 
+while getopts i:a:b:o: option
+do
+  case "${option}"
+  in
+  i) IP=${OPTARG};;
+  a) ADDRESS=${OPTARG};;
+  b) BOOTSTRAP=${OPTARG};;
+  o) ORGNAME=${OPTARG};;
+  esac
 done
 
 if [ $# -eq 0 ]
   then
     echo "No arguments supplied"
-    echo Enter your public IP or domain: 
+    echo Enter your public IP or domain:
 	read IP
 	while [ -z ${IP} ]; do
 	     read IP
 	done
-	echo Enter your wallet address or keep empty for generating new wallet: 
+	echo Enter your wallet address or keep empty for generating new wallet:
 	read ADDRESS
-	echo Is tihis main node y/N: 
+	echo Is tihis main node y/N:
 	read BOOTSTRAP
+	echo Enter organization name:
+	read ORGNAME
 	echo $IP
 	echo $ADDRESS
 	echo $BOOTSTRAP
+	echo $ORGNAME
 fi
 # Check for ip
 if [ ! $IP  ]
   then
-    echo "first argument must be server domain/IP"
+    echo "Server domain/IP not provided."
+    exit 1
+fi
+
+# Check for Organization name
+if [ ! $ORGNAME  ]
+  then
+    echo "No organization name (-o) provided."
     exit 1
 fi
 
@@ -54,6 +65,7 @@ if [ $ADDRESS  ]
 	read -p "Wallet password: " password; echo
 	stty echo
 	echo $password > cache.tmp
+	sed -i 's/PPPP/'$password'/g' generateContract.js
 	account_address=$(geth --datadir=eth-data account new --password cache.tmp)
 	rm cache.tmp
 	account_address=0x$(echo $account_address | cut -d'{' -f 2| cut -d'}' -f 1)
@@ -96,3 +108,22 @@ cp rpc.nginx /etc/nginx/sites-enabled/
 service nginx restart
 geth init genesis.json --datadir eth-data
 nohup geth --datadir=eth-data --bootnodes=$enode --mine --minerthreads=1 --rpc --rpccorsdomain "*" --rpcaddr 127.0.0.1 --rpcport 7001 --etherbase=$account_address &
+
+sleep 10
+
+abi=cat bin/contracts/Organisation/Organisation.abi
+data=cat bin/contracts/Organisation/Organisation.bin
+
+sed -i 's/OOOO/'$ORGNAME'/g' generateContract.js
+sed -i 's/QQQQ/'$ADDRESS'/g' generateContract.js
+sed -i 's/AAAA/'$abi'/g' generateContract.js
+sed -i 's/DDDD/'$data'/g' generateContract.js
+geth --exec 'loadScript("generateContract.js")' attach ipc:eth-data/geth.ipc > transaction.txt
+transactionHash=$(head -n 1 transaction.txt)
+
+sleep 20
+sed -i 's/TTTT/'$transactionHash'/g' getContractAddress.js
+geth --exec 'loadScript("getContractAddress.js")' attach ipc:eth-data/geth.ipc > contractAddress.txt
+contractAddress=$(head -n 1 contractAddress.txt)
+echo $contractAddress > /var/www/html/contractAddress.html
+

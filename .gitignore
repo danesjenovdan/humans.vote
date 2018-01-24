@@ -10,3 +10,7 @@ boot.key
 # wallet
 wallet.address
 nohup\.out
+
+#local files
+contractAddress.txt
+transaction.txt
