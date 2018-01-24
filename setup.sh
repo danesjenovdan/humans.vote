@@ -22,8 +22,14 @@ if [ $# -eq 0 ]
 	read ADDRESS
 	echo Is tihis main node y/N:
 	read BOOTSTRAP
-	echo Enter organization name:
-	read ORGNAME
+	if [ "$BOOTSTRAP" = "Y" ] || [ "$BOOTSTRAP" = "y" ]
+	  then
+	    echo Enter organization name:
+	    read ORGNAME
+	    while [ -z ${ORGNAME} ]; do
+		  read ORGNAME
+		done
+	fi
 	echo $IP
 	echo $ADDRESS
 	echo $BOOTSTRAP
@@ -33,13 +39,6 @@ fi
 if [ ! $IP  ]
   then
     echo "Server domain/IP not provided."
-    exit 1
-fi
-
-# Check for Organization name
-if [ ! "$ORGNAME"  ]
-  then
-    echo "No organization name (-o) provided."
     exit 1
 fi
 
@@ -76,6 +75,12 @@ fi
 # run bootstrap node
 if [ "$BOOTSTRAP" = "Y" ] || [ "$BOOTSTRAP" = "y" ]
   then
+    # Check for Organization name 
+	if [ ! "$ORGNAME"  ] 
+	  then 
+	    echo "No organization name (-o) provided." 
+	    exit 1 
+	fi 
   	#generate random chainId and nonce
   	echo "set Bootstrap node"
 	chainId=$(shuf -i 1-10000 -n 1)
