@@ -138,26 +138,9 @@ if [ "$BOOTSTRAP" = "Y" ] || [ "$BOOTSTRAP" = "y" ]
 
 	sleep 20
 	sed -i 's/TTTT/'$transactionHash'/g' getContractAddress.js
+	geth --exec 'loadScript("getContractAddress.js")' attach ipc:eth-data/geth.ipc > contractAddress.txt
+	contractAddress=$(head -n 1 contractAddress.txt)
+	echo $contractAddress > /var/www/html/contractAddress.html
 
-	b=0
-	while [ 1 ]
-	   do
-		geth --exec 'loadScript("getContractAddress.js")' attach ipc:eth-data/geth.ipc > contractAddress.txt
-		status=$(sed -n '2{p;q;}' contractAddress.txt)
-		((b++))
-	    echo $status
-	    if [ "$status" == "true" ]
-                then
-		    contractAddress=$(head -n 1 contractAddress.txt)
-	            echo $contractAddress > /var/www/html/contractAddress.html
-                break
-            fi
-	    if [ $b == 5 ]
-		then
-		$echo "ALERT: Contract could not be confirmed."
-	        break
-	    fi
-        sleep 20
-	done
-rm generateContract.js
+	rm generateContract.js
 fi
