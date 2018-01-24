@@ -97,7 +97,7 @@ export class ModalContractFunctionViewComponent {
           console.log('votesAgainst: ', votesAgainst);
           let alert = this.alertCtrl.create({
             title: 'Current voting result',
-            subTitle: (contractResult[1] === true ? 'Vote passed' : 'Vote failed') + `<br/> For : ${votesFor} | Against : ${votesAgainst}`,
+            subTitle: (!contractResult || !contractResult.length ? 'Not found' : (contractResult[1] === true ? 'Vote passed' : 'Vote failed') + `<br/> For : ${votesFor} | Against : ${votesAgainst}`),
             buttons: ['Dismiss']
           });
           alert.present();
