@@ -11,6 +11,9 @@ Blockchain voting for humans
 
 # What do you need to do if you want to try this out
 
+## Step 0: Demo script
+We prepared everything for a real-life-like test voting scenario. You need at least two people to make this work. [--> Click here for the script <--](https://github.com/danesjenovdan/humans.vote/script.md)
+
 ## Step 1: Android application
 Download the application from the github repository and install it. After running the application wallet, will be automatically generated for you, and you will be able to execute contract calls after someone gives you ether, or you get it by setting up miner.
 
