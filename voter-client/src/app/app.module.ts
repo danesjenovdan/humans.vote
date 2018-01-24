@@ -20,9 +20,6 @@ import { HttpProvider } from '../providers/http/http';
 import { ContractsPage, ContractFormPage } from '../pages/contracts/contracts';
 import { Toast } from '@ionic-native/toast';
 import { Clipboard } from '@ionic-native/clipboard';
-=======
-import { ContractsPage, ContractFormPage } from '../pages/contracts/contracts';
->>>>>>> Implement input fields for contract deployment
 
 @NgModule({
   declarations: [
