@@ -25,9 +25,9 @@ contract MotionVotingOrg is Organisation {
     // option "object" structure
     struct Option {
         string name;
-        uint voteValue;
+        int voteValue;
         bool isVotePositive;
-        uint numberOfVotes;
+        int numberOfVotes;
     }
 
     struct Vote {
@@ -45,28 +45,27 @@ contract MotionVotingOrg is Organisation {
         numberOfMotions = 0;
     }
 
-    function addMotion(
-        string _motionTitle,
-        string _motionAbstract,
-        uint _votingDeadline,
-        uint _minimumQuorum,
-        uint _majorityPercentage
-    ) public onlyOwner returns (uint _motionID) {
-        uint motionID = motions.length++;
-        Motion storage m = motions[motionID];
+    // function addMotion(
+    //     string _motionTitle,
+    //     string _motionAbstract,
+    //     uint _votingDeadline,
+    //     uint _minimumQuorum,
+    //     uint _majorityPercentage
+    // ) public onlyOwner returns (uint _motionID) {
+    //     uint motionID = motions.length++;
+    //     Motion storage m = motions[motionID];
 
-        m.motionTitle = _motionTitle;
-        m.motionAbstract = _motionAbstract;
-        m.numberOfOptions = 0;
-        m.votingDeadline = _votingDeadline;
-        m.minimumQuorum = _minimumQuorum;
-        m.majorityPercentage = _majorityPercentage;
+    //     m.motionTitle = _motionTitle;
+    //     m.motionAbstract = _motionAbstract;
+    //     m.numberOfOptions = 0;
+    //     m.votingDeadline = _votingDeadline;
+    //     m.minimumQuorum = _minimumQuorum;
+    //     m.majorityPercentage = _majorityPercentage;
 
-        numberOfMotions++;
+    //     numberOfMotions++;
 
-        return motionID;
-    }
-
+    //     return motionID;
+    // }
     function addBasicMotion(
         string _motionTitle,
         string _motionAbstract,
@@ -91,13 +90,32 @@ contract MotionVotingOrg is Organisation {
         return motionID;
     }
 
-    function getMotion(uint _motionID) public onlyMembers returns (string theTitle) {
+    function getMotionResult(uint _motionID) public onlyMembers returns (bool theresult) {
         Motion storage m = motions[_motionID];
-
-        return m.motionTitle;
+        return m.motionPassed;
     }
 
-    function addOption(uint motionID, string name, uint voteValue, bool isVotePositive) public returns (uint optionID) {
+    function calculateMotionResult(uint _motionID) public onlyMembers returns (int theResult) {
+        Motion storage m = motions[_motionID]; // get motion
+        int motionResult = 0;
+
+        for (uint i = 0; i < m.options.length; i++) {
+            Option storage o = m.options[i];
+            if (o.isVotePositive) {
+                motionResult += o.numberOfVotes * o.voteValue;
+            } else {
+                motionResult -= o.numberOfVotes * o.voteValue;
+            }
+        }
+
+        if (motionResult > 0) {
+            m.motionPassed = true;
+        }
+
+        return motionResult;
+    }
+
+    function addOption(uint motionID, string name, int voteValue, bool isVotePositive) public returns (uint optionID) {
         Motion storage m = motions[motionID]; // get Motion
         optionID = m.options.length++; // optionID is next option (autoincrement)
         Option storage o = m.options[optionID]; // get Option
@@ -109,7 +127,7 @@ contract MotionVotingOrg is Organisation {
         m.numberOfOptions = optionID++; // increment number of proposals
     }
 
-    function voteForMotion(uint _motionID, string _option) public onlyMembers returns (int _voteID) {
+    function voteForMotion(uint _motionID, string _option) public onlyMembers returns (uint _voteID) {
         Motion storage m = motions[_motionID]; // get motion
         uint optionID = findOption(_motionID, _option);
 
@@ -118,6 +136,11 @@ contract MotionVotingOrg is Organisation {
 
         v.optionID = optionID;
         v.voter = msg.sender;
+
+        Option storage o = m.options[optionID];
+        o.numberOfVotes++;
+
+        return voteID;
     }
 
     function findOption(uint _motionID, string _optionString) returns (uint optionIndex) {
@@ -129,8 +152,8 @@ contract MotionVotingOrg is Organisation {
                 return i;
             }
 
-            return 404;
         }
+        return 404;
     }
 
     // function voteForOption(uint optionID) public {
