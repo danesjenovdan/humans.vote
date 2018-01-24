@@ -95,6 +95,28 @@ contract MotionVotingOrganisation is PrivateOrg {
         MotionAdded(motionID);        
     }
 
+    function voteForMotion(uint _motionID, string _option) public onlyMembers returns (uint _voteID) {
+        Motion storage m = motions[_motionID]; // get motion
+
+        // user can only vote once
+        require(!m.voted[msg.sender]); // If has already voted, cancel
+        m.voted[msg.sender] = true; // Set this voter as having voted
+
+        uint optionID = findOption(_motionID, _option); // get relevant option id
+
+        // create vote
+        uint voteID = m.votes.length++;
+        Vote storage v = m.votes[voteID];
+        v.optionID = optionID;
+        v.voter = msg.sender;
+
+        // increase number of votes
+        Option storage o = m.options[optionID];
+        o.numberOfVotes++;
+
+        return voteID;
+    }
+
     function addOption(uint motionID, string name, int voteValue, bool isVotePositive) private returns (uint optionID) {
         Motion storage m = motions[motionID]; // get Motion
         optionID = m.options.length++; // optionID is next option (autoincrement)
@@ -107,6 +129,19 @@ contract MotionVotingOrganisation is PrivateOrg {
         m.numberOfOptions = optionID++; // increment number of proposals
 
         return optionID;
+    }
+
+    function findOption(uint _motionID, string _optionString) private returns (uint optionIndex) {
+        Motion storage m = motions[_motionID]; // get motion
+        for (uint i = 0; i < m.options.length; i++) {
+            Option storage o = m.options[i];
+            string storage optionName = o.name;
+            if (keccak256(optionName) == keccak256(_optionString)) {
+                return i;
+            }
+
+        }
+        return 404;
     }
     
 }
