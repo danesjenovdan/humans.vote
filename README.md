@@ -7,7 +7,7 @@ Blockchain voting for humans
 
 ## What we achieved in 48 hours
 
-[Android APK](https://github.com/danesjenovdan/humans.vote/blob/master/voter-client/android-debug.apk?raw=true)
+[Android APK](https://github.com/danesjenovdan/humans.vote/blob/master/voter-client/android-debug.apk?raw=true) (An app that basically allows you to do all the things you want to, but we didn't quite have the time to implement the nice user interface. :()
 
 # What do you need to do if you want to try this out
 
