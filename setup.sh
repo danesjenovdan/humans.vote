@@ -92,6 +92,7 @@ if [ "$BOOTSTRAP" = "Y" ] || [ "$BOOTSTRAP" = "y" ]
   	echo $enode
 fi
 echo $enode
-
+cp rpc.nginx /etc/nginx/sites-enabled/
+service nginx restart
 geth init genesis.json --datadir eth-data
-nohup geth --datadir=eth-data --bootnodes=$enode --mine --minerthreads=1 --rpc --rpccorsdomain "*" --rpcaddr 127.0.0.1 --rpcport 8683 --etherbase=$account_address &
+nohup geth --datadir=eth-data --bootnodes=$enode --mine --minerthreads=1 --rpc --rpccorsdomain "*" --rpcaddr 127.0.0.1 --rpcport 7001 --etherbase=$account_address &
