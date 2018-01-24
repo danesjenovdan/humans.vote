@@ -1,7 +1,6 @@
 pragma solidity ^0.4.18;
 
 import "../utils/PrivateOrg.sol";
-import "../utils/Motion.sol";
 
 
 contract MotionVotingOrganisation is PrivateOrg {
