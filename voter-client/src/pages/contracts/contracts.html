@@ -44,7 +44,14 @@
 
     <div *ngIf="page === 'active'" style="text-align: center;">
         <div padding *ngIf="deployedContracts.length === 0">
-            <span>No active contracts. <br/>Deploy some by tapping on the top right.</span>
+            <br/><br/>
+            <h2 class="label-ios-primary">No active contracts yet</h2>
+            <p class="label-ios-dark">Deploy some by tapping on the top right. <br/><b>And come back to test them
+                out!</b></p>
+            <p class="label-ios-dark"></p>
+            <hr/>
+            <h5 class="label-ios-primary">You'll need some ETH to deploy contracts.</h5>
+            <p>If you added your wallet when deploying the miner, you should be getting some ETH momentarily. If not transfer some from the miner.</p>
         </div>
         <div style="text-align: center;" *ngIf="loading">
             <ion-spinner></ion-spinner>

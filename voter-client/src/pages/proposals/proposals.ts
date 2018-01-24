@@ -18,7 +18,7 @@ export class ProposalsPage implements OnInit {
   balance: string = '0.0';
   etherValue: string = '0.0';
   recipientAddress: string;
-  addressBalance: string;
+  addressBalance: string = '0.0';
   sending: boolean = false;
 
   constructor(
@@ -27,11 +27,13 @@ export class ProposalsPage implements OnInit {
 
   }
 
-  ngOnInit() {
+  async ngOnInit() {
 
     this.provider = this.walletUtils.provider;
     this.wallet = this.walletUtils.wallet;
     this.address = this.walletUtils.walletAddress;
+
+    this.balance = await this.walletUtils.checkMyWalletBalance();
 
   }
 

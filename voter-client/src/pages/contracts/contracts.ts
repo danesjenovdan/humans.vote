@@ -6,6 +6,7 @@ import { ConfigProvider } from '../../providers/config/config';
 import { TRANSACTION_STATUS, WalletUtilsProvider } from '../../providers/wallet-utils/wallet-utils';
 import { ITransaction, StorageProvider } from '../../providers/storage/storage';
 import { ModalContractViewComponent } from '../../components/modal-contract-view/modal-contract-view';
+import { AlertController } from 'ionic-angular';
 
 declare var cordova;
 
@@ -22,11 +23,12 @@ export class ContractsPage implements OnInit {
 
   constructor(
     private navCtrl: NavController,
-    public navParams: NavParams,
+    private navParams: NavParams,
     private httpProvider: HttpProvider,
     private storage: StorageProvider,
     private walletUtils: WalletUtilsProvider,
-    public modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private alertCtrl: AlertController
   ) {
   }
 

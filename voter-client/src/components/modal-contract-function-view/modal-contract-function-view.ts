@@ -71,7 +71,7 @@ export class ModalContractFunctionViewComponent {
     const contractResult = await this.walletUtils.connectToContract(this.contract.contractAddress, this.contract.abi, this.abiItem.functionName, attributes);
 
     let loading = this.loadingCtrl.create({
-      content: 'Please wait...'
+      content: 'Please wait... (mining)'
     });
     loading.present();
 

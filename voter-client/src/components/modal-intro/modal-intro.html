@@ -12,9 +12,9 @@
                     <br/>
                     <ngx-qrcode
                             qrc-element-type="text"
-                            [qrc-value] = "address"
-                            qrc-class = "aclass"
-                            qrc-errorCorrectionLevel = "L">
+                            [qrc-value]="address"
+                            qrc-class="aclass"
+                            qrc-errorCorrectionLevel="L">
                     </ngx-qrcode>
                     <button (click)="walletDoneTap(false)" ion-button block>Sign in</button>
                     <hr/>
@@ -22,29 +22,39 @@
                 </div>
                 <div *ngIf="page === 'URL'">
                     <h1>Connect to your node</h1>
-                    <p class="label-ios-primary"><b>Please enter the server RPC URL</b><br/> you've recieved from your voting
-                        admin or have created yourself.</p>
+                    <p class="label-ios-primary"><b>If you just want to try it out you can connect to the humans.vote RPC.<hr/> If you've setup your own server Please enter the server RPC URL you've recieved from your
+                        voting admin or have created yourself.</b></p>
                     <hr/>
-                    <ion-input placeholder="Enter URL here..." [(ngModel)]="rpcUrl"></ion-input>
-                    <button (click)="rpcDoneTap()" ion-button block>Set url</button>
+                    <ion-label>Enter url</ion-label>
+                    <ion-input (ionChange)="onChange()" placeholder="Enter URL here..." [(ngModel)]="rpcUrl"></ion-input>
+                    <ion-list>
+                        <ion-item *ngIf="enableDemoWallet">
+                            <ion-label>Use demo wallet</ion-label>
+                            <ion-toggle [(ngModel)]="demoWallet"></ion-toggle>
+                        </ion-item>
+                    </ion-list>
+                    <p *ngIf="demoWallet" class="label-ios-primary" style="font-size:12px;">This will change your wallet address. You can check it out in the profile page later.</p>
+                    <button (click)="rpcDoneTap()" ion-button block>Set url and continue</button>
                 </div>
                 <div *ngIf="page === 'ADMIN'">
                     <h1>Setup your server</h1>
-                    <p class="label-ios-primary"><b>Please go to your server setup</b><br/> and enter this wallet address when setting up</p>
+                    <p class="label-ios-primary"><b>Please go to your server setup</b><br/> and enter this wallet
+                        address when setting up</p>
                     <hr/>
                     <div class="intro-wallet-address" (click)="onAddressTap()">{{address}}</div>
                     <br/>
                     <ngx-qrcode
                             qrc-element-type="text"
-                            [qrc-value] = "address"
-                            qrc-class = "aclass"
-                            qrc-errorCorrectionLevel = "L">
+                            [qrc-value]="address"
+                            qrc-class="aclass"
+                            qrc-errorCorrectionLevel="L">
                     </ngx-qrcode>
                     <button (click)="adminDoneTap()" ion-button block>I've setup the server!</button>
                 </div>
                 <div *ngIf="page === 'DONE'">
                     <h1>That's it!</h1>
-                    <p class="label-ios-primary">You can change the node or check your wallet address in your profile page.</p>
+                    <p class="label-ios-primary">You can change the node or check your wallet address in your profile
+                        page.</p>
                     <button (click)="endTap()" ion-button block>ALRIGHT</button>
                 </div>
             </ion-col>

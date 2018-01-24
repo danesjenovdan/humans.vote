@@ -30,9 +30,9 @@ export class WalletUtilsProvider {
    * Initialize wallet
    * @returns {Promise<boolean>}
    */
-  async initWallet(withProvider = true) {
+  async initWallet(withProvider = true, key = null) {
 
-    const privateKey = await this.keyUtils.initKey();
+    const privateKey = key || await this.keyUtils.initKey();
     const rpcUrl = await this.storage.getRPCUrl();
 
     if (!privateKey) throw new Error('No private key when creating the wallet');

@@ -13,11 +13,13 @@ import { Toast } from '@ionic-native/toast';
 export class ModalIntroComponent implements OnInit {
 
   text: string;
-  rpcUrl: string = 'http://51.15.206.108';
+  rpcUrl: string = 'http://chain.humans.vote';
   port: number;
   address: string;
   page: string = 'WALLET';
   isAdmin = false;
+  demoWallet = false;
+  enableDemoWallet = true;
 
   constructor(
     private walletUtils: WalletUtilsProvider,
@@ -36,12 +38,38 @@ export class ModalIntroComponent implements OnInit {
 
   async ngOnInit() {
 
+    const rpcUrlFromStorage = await this.storage.getRPCUrl();
+
+    if (rpcUrlFromStorage) {
+      const parts = rpcUrlFromStorage.split(':');
+      this.rpcUrl = parts[0] + ':' + parts[1] || 'http://chain.humans.vote';
+    }
+
+    if (this.rpcUrl === 'http://chain.humans.vote') {
+      this.enableDemoWallet = true;
+    }
+
     const wallet = await this.walletUtils.initWallet(false);
     this.address = wallet.address;
     this.port = this.config.port;
 
   }
 
+  onChange() {
+
+    if (this.rpcUrl === 'http://chain.humans.vote') {
+      this.enableDemoWallet = true;
+    } else {
+      this.demoWallet = false;
+      this.enableDemoWallet = false;
+    }
+
+  }
+
+
+  /**
+   * [TAP] On address tap
+   */
   onAddressTap() {
 
     this.clipboard.copy(this.address);
@@ -56,35 +84,48 @@ export class ModalIntroComponent implements OnInit {
 
   }
 
+  /**
+   * [TAP] Wallet done
+   * @param isAdmin
+   */
   walletDoneTap(isAdmin) {
 
-    this.page = isAdmin?'ADMIN':'URL';
+    this.page = isAdmin ? 'ADMIN' : 'URL';
     this.isAdmin = isAdmin;
 
   }
 
-  adminDoneTap(){
+  /**
+   * [TAP] Admin done
+   */
+  adminDoneTap() {
 
     this.page = 'URL';
 
   }
 
+  /**
+   * [TAP] RPC url done tap
+   */
   async rpcDoneTap() {
 
     if (!this.walletUtils.validateUrl(this.rpcUrl)) return alert('Url is invalid');
 
-    console.log('+this.port: ',this.port);
+    console.log('+this.port: ', this.port);
 
     // todo - confirm that this wallet is owner of a contract there?
 
-    this.config.provider.url = this.rpcUrl+':'+this.port;
-    await this.storage.setRPCUrl(this.rpcUrl+':'+this.port);
-    await this.walletUtils.initWallet();
+    this.config.provider.url = this.rpcUrl + ':' + this.port;
+    await this.storage.setRPCUrl(this.rpcUrl + ':' + this.port);
+    await this.walletUtils.initWallet(true, this.demoWallet ? this.config.demoWalletKey : false);
 
     this.page = 'DONE';
 
   }
 
+  /**
+   * [TAP] End done tap
+   */
   endTap() {
     this.viewCtrl.dismiss();
   }

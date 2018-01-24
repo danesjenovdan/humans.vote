@@ -5,6 +5,7 @@ import { ConfigProvider } from '../../providers/config/config';
 import { ModalController, NavParams, ViewController } from 'ionic-angular';
 import { includes, startCase } from 'lodash';
 import { ModalContractFunctionViewComponent } from '../modal-contract-function-view/modal-contract-function-view';
+import { AlertController } from 'ionic-angular';
 
 /**
  * Generated class for the ModalContractViewComponent component.
@@ -24,12 +25,13 @@ export class ModalContractViewComponent {
   contractName: string;
 
   constructor(
-    public params: NavParams,
-    public viewCtrl: ViewController,
+    private params: NavParams,
+    private viewCtrl: ViewController,
     private config: ConfigProvider,
     private httpProvider: HttpProvider,
     private walletUtils: WalletUtilsProvider,
-    public modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private alertCtrl: AlertController
   ) {
 
     const setters = this.params.get('abi')
@@ -67,7 +69,14 @@ export class ModalContractViewComponent {
 
     const modal = this.modalCtrl.create(ModalContractFunctionViewComponent, { abiItem: item, contract: this.contract });
     modal.onDidDismiss(data => {
-
+      if (data) {
+        let alert = this.alertCtrl.create({
+          title: 'Response',
+          subTitle: data,
+          buttons: ['Dismiss']
+        });
+        alert.present();
+      }
     });
     modal.present();
 
@@ -84,8 +93,13 @@ export class ModalContractViewComponent {
 
     const modal = this.modalCtrl.create(ModalContractFunctionViewComponent, { abiItem: item, contract: this.contract });
     modal.onDidDismiss(data => {
-      if(data){
-        alert(data);
+      if (data) {
+        let alert = this.alertCtrl.create({
+          title: 'Response',
+          subTitle: data,
+          buttons: ['Dismiss']
+        });
+        alert.present();
       }
     });
     modal.present();
