@@ -26,6 +26,8 @@ https://github.com/danesjenovdan/humans.vote/tree/master/bin/contracts
 
 **IMPORTANT! You can test the platform out without doing any of the steps below. Just connect to chain.humans.vote for the RPC and choose "Use demo wallet" you will get access to a preset wallet with ether. You can play around with it, but you should set up your own network.**
 
+**BUG:** If you use the back button when viewing the contract an alert pops up and says "Not found". Do not be alrmed, it's just a harmless bug. Just generally stay away from the Android OS back button in this version of the app and everything will be fine. If you do use it, nothing will break, you just might see the annoying popup.
+
 ## Step 2: Installation instructions - Ubuntu
 Because decentralisation also means private networks and mining fees are often prohibitive in certain cases (yay for PoS!) running private mining networks makes sense when you have a group of intrinsically motivated individuals (like an NGO or citizens in a democratic voting system) willing to pay for transparency with actual computing cycles (and electricity). In order to vote and interact with contracts "for free", you need to set up your own network. With humans.vote, this is becomes a trivial task. Simply follow the instructions below and you should be up and running in about 15 minutes. No joke.
 
