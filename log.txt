@@ -1,0 +1,2 @@
+err: Error: The method personal_unlockAccount does not exist/is not available
+false
