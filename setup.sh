@@ -60,7 +60,7 @@ apt-get install nginx -y
 apt-get install qrencode -y
 
 # create temp wallet address
-password = "password"
+password="password"
 echo $password > cache.tmp
 account_address=$(geth --datadir=eth-data account new --password cache.tmp)
 rm cache.tmp
@@ -113,7 +113,8 @@ nohup geth --datadir=eth-data --bootnodes=$enode --mine --minerthreads=1 --rpc -
 # run bootstrap node
 if [ "$BOOTSTRAP" = "Y" ] || [ "$BOOTSTRAP" = "y" ]
   then
-	sleep 10
+	echo "Waiting 20 seconds, for blockchain to establish to execute contract generation on ETH network..."
+	sleep 20
 
 	abi=$(cat bin/contracts/MotionVotingOrganisation/MotionVotingOrganisation.abi)
 	data=$(cat bin/contracts/MotionVotingOrganisation/MotionVotingOrganisation.bin)
@@ -133,8 +134,9 @@ if [ "$BOOTSTRAP" = "Y" ] || [ "$BOOTSTRAP" = "y" ]
 	geth --exec 'loadScript("generateContract.js")' attach ipc:eth-data/geth.ipc > transaction.txt
 	transactionHash=$(head -n 1 transaction.txt)
 
+	echo "Waiting 60 seconds, for contract to be confirmed on network..."
 	sleep 60
-	sed -i 's/PPPP/'$password'/g' getContractAddressAndTransferOwnership.js
+	sed -i 's/PPPP/'"$password"'/g' getContractAddressAndTransferOwnership.js
 	sed -i 's/QQQQ/'$TEMPADDRESS'/g' getContractAddressAndTransferOwnership.js
 	sed -i 's/AAAA/'"$abi"'/g' getContractAddressAndTransferOwnership.js
 	sed -i 's/RRRR/'$ADDRESS'/g' getContractAddressAndTransferOwnership.js
@@ -143,6 +145,6 @@ if [ "$BOOTSTRAP" = "Y" ] || [ "$BOOTSTRAP" = "y" ]
 	contractAddress=$(head -n 1 contractAddress.txt)
 	echo $contractAddress > /var/www/html/contractAddress.html
 
-	rm generateContract.js
-	rm getContractAddressAndTransferOwnership.js
+#	rm generateContract.js
+#	rm getContractAddressAndTransferOwnership.js
 fi
