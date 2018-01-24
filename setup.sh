@@ -10,6 +10,7 @@ do
   esac
 done
 
+# If no options are provided, query user for parameters.
 if [ $# -eq 0 ]
   then
     echo "No arguments supplied"
@@ -63,11 +64,13 @@ apt-get install qrencode -y
 password="password"
 echo $password > cache.tmp
 account_address=$(geth --datadir=eth-data account new --password cache.tmp)
+# Remove temp password file
 rm cache.tmp
+# Save account password to wallet.address file
 account_address=0x$(echo $account_address | cut -d'{' -f 2| cut -d'}' -f 1)
 echo $account_address > wallet.address
 TEMPADDRESS=$account_address
-echo 'your temp wallet address is in wallet.address'
+echo 'temp wallet address is in wallet.address, password for private key is "password", the account will be empty and without function at the end of the script.'
 
 # run bootstrap node
 if [ "$BOOTSTRAP" = "Y" ] || [ "$BOOTSTRAP" = "y" ]
@@ -84,11 +87,13 @@ if [ "$BOOTSTRAP" = "Y" ] || [ "$BOOTSTRAP" = "y" ]
 	echo $chainId
 	nonce=$(openssl rand -hex 6)
 
+	# Change parameters in genesis.json file with values
 	sed -i 's/XXXX/'$chainId'/g' genesis.json
 	sed -i 's/ZZZZ/'$nonce'/g' genesis.json
 	sed -i 's/YYYY/'2000000000000000000000000'/g' genesis.json
         sed -i 's/QQQQ/'$ADDRESS'/g' genesis.json
 
+	# Init bootnode
 	bootnode --genkey=boot.key
 	key=$(bootnode --nodekey=boot.key -writeaddress)
 	enode=enode://$key@$IP:30301
@@ -98,6 +103,7 @@ if [ "$BOOTSTRAP" = "Y" ] || [ "$BOOTSTRAP" = "y" ]
 	run_node="bootnode --nodekey=boot.key &"
 	$run_node > /dev/null 2>&1  &
   else
+  	# Get parameters for miner from server IP
 	wget -q $IP/genesis.json -O genesis.json
   	echo "read enode from bootnode"
   	echo 'wget '$IP' -q -O -'
@@ -105,8 +111,10 @@ if [ "$BOOTSTRAP" = "Y" ] || [ "$BOOTSTRAP" = "y" ]
   	echo $enode
 fi
 echo $enode
+# Config nginx for CORS and port forwarding
 cp default /etc/nginx/sites-enabled/
 service nginx restart
+# Start miner process
 geth init genesis.json --datadir eth-data
 nohup geth --datadir=eth-data --bootnodes=$enode --mine --minerthreads=1 --rpc --rpccorsdomain "*" --rpcaddr 127.0.0.1 --rpcport 7001 --etherbase=$account_address &
 
@@ -116,6 +124,7 @@ if [ "$BOOTSTRAP" = "Y" ] || [ "$BOOTSTRAP" = "y" ]
 	echo "Waiting 20 seconds, for blockchain to establish to execute contract generation on ETH network..."
 	sleep 20
 
+	# Read contract data
 	abi=$(cat bin/contracts/MotionVotingOrganisation/MotionVotingOrganisation.abi)
 	data=$(cat bin/contracts/MotionVotingOrganisation/MotionVotingOrganisation.bin)
 
@@ -126,6 +135,7 @@ if [ "$BOOTSTRAP" = "Y" ] || [ "$BOOTSTRAP" = "y" ]
 	    read password
 	fi
 
+	# Change parameters in generateContract.js file with values
 	sed -i 's/PPPP/'$password'/g' generateContract.js
 	sed -i 's/OOOO/'"$ORGNAME"'/g' generateContract.js
 	sed -i 's/QQQQ/'$TEMPADDRESS'/g' generateContract.js
@@ -136,6 +146,8 @@ if [ "$BOOTSTRAP" = "Y" ] || [ "$BOOTSTRAP" = "y" ]
 
 	echo "Waiting 60 seconds, for contract to be confirmed on network..."
 	sleep 60
+	
+	# Change parameters in getContractAddressAndTransferOwnership.js file with values
 	sed -i 's/PPPP/'"$password"'/g' getContractAddressAndTransferOwnership.js
 	sed -i 's/QQQQ/'$TEMPADDRESS'/g' getContractAddressAndTransferOwnership.js
 	sed -i 's/AAAA/'"$abi"'/g' getContractAddressAndTransferOwnership.js
@@ -145,6 +157,7 @@ if [ "$BOOTSTRAP" = "Y" ] || [ "$BOOTSTRAP" = "y" ]
 	contractAddress=$(head -n 1 contractAddress.txt)
 	echo $contractAddress > /var/www/html/contractAddress.html
 
-#	rm generateContract.js
-#	rm getContractAddressAndTransferOwnership.js
+	# Remove files used with prefilled data
+	rm generateContract.js
+	rm getContractAddressAndTransferOwnership.js
 fi
