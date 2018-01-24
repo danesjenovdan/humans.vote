@@ -138,7 +138,7 @@ contract DemoVoting is PrivateOrg {
         string memory proposalResult;
 
         // ...then execute result
-        if (p.currentResult > majorityMargin) {
+        if (p.currentResult >= majorityMargin) {
             // Proposal passed
             p.proposalPassed = true;
             proposalResult = "The proposal passed. Congrats!";
