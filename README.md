@@ -14,7 +14,9 @@ Blockchain voting for humans
 ## Step 1: Android application
 Download the application from the github repository and install it. After running the application wallet, will be automatically generated for you, and you will be able to execute contract calls after someone gives you ether, or you get it by setting up miner.
 
-* IMPORTANT! You can test the platform out without doing any of the below step. Just connect to chain.humans.vote for the RPC and you will get access to a preset wallet with ether. You can play around with it, but you should set up your own network. *
+**Where do the contracts you interact with come from?** https://github.com/danesjenovdan/humans.vote/tree/master/bin/contracts
+
+**IMPORTANT! You can test the platform out without doing any of the below step. Just connect to chain.humans.vote for the RPC and you will get access to a preset wallet with ether. You can play around with it, but you should set up your own network.**
 
 ## Step 2: Installation instructions - Ubuntu
 Because decentralisation also means private networks and mining fees are often prohibitive (yay for PoS!) running private mining networks makes sense when you have a group of intrinsically motivated individuals (like an NGO). In order to vote and interact with contracts "for free", you need to set up your own network. With humans.vote, this is actually a trivial task. Just follow the instructions below.
