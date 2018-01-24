@@ -65,5 +65,7 @@ The purpose of user becoming a miner is to ensure that transactions are validate
 ```personal.unlockAccount(eth.accounts[0], ‘geslo’);```
 * Send ether to another wallet
 ```eth.sendTransaction({from: "FROMACCOUNTADDRESS", to: "TOACCOUNTADDRESS", value: web3.toWei(ETHERVALUE,”ether"), gas: 500000})```
+* Instantiate a js object for calling the contract
+```var contract = eth.contract(ABI).at(CONTRACTADDRESS);```
 * Change ownership of contract
 ```contract.transferOwnership.sendTransaction("TOACCOUNTADDRESS", {from: FROMACCOUNTADDRESS})```
