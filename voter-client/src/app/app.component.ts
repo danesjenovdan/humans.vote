@@ -18,10 +18,7 @@ export class MyApp {
   constructor(
     platform: Platform,
     statusBar: StatusBar,
-    splashScreen: SplashScreen,
-    private storage: StorageProvider,
-    private keyUtils: KeyUtilsProvider,
-    private walletUtils: WalletUtilsProvider
+    splashScreen: SplashScreen
   ) {
 
     platform.ready().then(() => {
@@ -30,20 +27,6 @@ export class MyApp {
       statusBar.styleDefault();
       splashScreen.hide();
     });
-
-  }
-
-  async initKey() {
-
-    // Check if private key is set
-    let privateKey = await this.storage.getPrivateKey();
-
-    console.log('privateKey: ', privateKey);
-
-    if (privateKey) return;
-
-    privateKey = await this.keyUtils.generatePrivateKey();
-    await this.storage.setPrivateKey(privateKey);
 
   }
 

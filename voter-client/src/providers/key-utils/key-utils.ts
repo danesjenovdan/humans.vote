@@ -29,6 +29,8 @@ export class KeyUtilsProvider {
     // Check if private key is set
     let privateKey = await this.storage.getPrivateKey();
 
+    console.log('privateKey: ',privateKey);
+
     if (privateKey) return privateKey;
 
     privateKey = await this.generatePrivateKey();
