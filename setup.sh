@@ -65,7 +65,6 @@ if [ $ADDRESS  ]
 	read -p "Wallet password: " password; echo
 	stty echo
 	echo $password > cache.tmp
-	sed -i 's/PPPP/'$password'/g' generateContract.js
 	account_address=$(geth --datadir=eth-data account new --password cache.tmp)
 	rm cache.tmp
 	account_address=0x$(echo $account_address | cut -d'{' -f 2| cut -d'}' -f 1)
@@ -111,12 +110,20 @@ nohup geth --datadir=eth-data --bootnodes=$enode --mine --minerthreads=1 --rpc -
 
 sleep 10
 
-abi=$(<bin/contracts/Organisation/Organisation.abi)
-data=$(<bin/contracts/Organisation/Organisation.bin)
+abi=$(cat bin/contracts/Organisation/Organisation.abi)
+data=$(cat bin/contracts/Organisation/Organisation.bin)
 
+# Check for Password
+if [ ! "$password"  ]
+  then
+    echo "Please enter your wallet password"
+    read password
+fi
+
+sed -i 's/PPPP/'$password'/g' generateContract.js
 sed -i 's/OOOO/'"$ORGNAME"'/g' generateContract.js
 sed -i 's/QQQQ/'$ADDRESS'/g' generateContract.js
-sed -i 's/AAAA/'$abi'/g' generateContract.js
+sed -i 's/AAAA/'"$abi"'/g' generateContract.js
 sed -i 's/DDDD/'$data'/g' generateContract.js
 geth --exec 'loadScript("generateContract.js")' attach ipc:eth-data/geth.ipc > transaction.txt
 transactionHash=$(head -n 1 transaction.txt)
@@ -126,4 +133,3 @@ sed -i 's/TTTT/'$transactionHash'/g' getContractAddress.js
 geth --exec 'loadScript("getContractAddress.js")' attach ipc:eth-data/geth.ipc > contractAddress.txt
 contractAddress=$(head -n 1 contractAddress.txt)
 echo $contractAddress > /var/www/html/contractAddress.html
-
