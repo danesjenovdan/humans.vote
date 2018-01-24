@@ -141,9 +141,11 @@ contract DemoVoting is PrivateOrg {
         if (p.currentResult > majorityMargin) {
             // Proposal passed
             p.proposalPassed = true;
+            proposalResult = "The proposal passed. Congrats!";
         } else {
             // Proposal failed
             p.proposalPassed = false;
+            proposalResult = "The proposal did not pass (yet).";
         }
 
 
