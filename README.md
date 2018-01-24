@@ -1,3 +1,4 @@
+
 # humans.vote
 Blockchain voting for humans
 
@@ -8,6 +9,9 @@ Blockchain voting for humans
 
 ## Design documentation
 [Google Doc with stuff](https://docs.google.com/document/d/1HivUUGqH4lilm60n36SA12tUegNr2g3yyi_9uRWT29I/edit#)
+
+## Android application
+Download the application from the github repository and install it. After running the application wallet, will be automatically generated for you, and you will be able to execute contract calls after someone gives you ether, or you get it by setting up miner.
 
 ## Installation instructions - Debian
 ### User (voter)
@@ -52,3 +56,15 @@ The purpose of user becoming a miner is to ensure that transactions are validate
 	* Basic contract is written into the blockchain
 	* enode address is exposed
 	* contract wallet is exposed
+
+## Administrator commands
+* Get address of own account
+```eth.accounts[0]```
+* Check balance
+```web3.fromWei(eth.getBalance(ACCOUNTADDRESS), "ether")```
+* Unlock account before making the transaction
+```personal.unlockAccount(eth.accounts[0], ‘geslo’);```
+* Send ether to another wallet
+```eth.sendTransaction({from: "FROMACCOUNTADDRESS", to: "TOACCOUNTADDRESS", value: web3.toWei(ETHERVALUE,”ether"), gas: 500000})```
+* Change ownership of contract
+```contract.transferOwnership.sendTransaction("TOACCOUNTADDRESS", {from: FROMACCOUNTADDRESS})```
