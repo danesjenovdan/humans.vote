@@ -6,7 +6,7 @@ var token = tokenContract.new(
   {
     from:"QQQQ",
     data: "0xDDDD",
-    gas: 1000000000
+    gas: 8000000
   }, function(e, contract){
     if(!e) {
 	console.log(contract.transactionHash);
