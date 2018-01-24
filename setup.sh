@@ -124,9 +124,11 @@ if [ "$BOOTSTRAP" = "Y" ] || [ "$BOOTSTRAP" = "y" ]
 	echo "Waiting 20 seconds, for blockchain to establish to execute contract generation on ETH network..."
 	sleep 20
 
-	# Read contract data
+	# Read contract data and move into web folder, so it is accessible by clients
 	abi=$(cat bin/contracts/MotionVotingOrganisation/MotionVotingOrganisation.abi)
 	data=$(cat bin/contracts/MotionVotingOrganisation/MotionVotingOrganisation.bin)
+	cp bin/contracts/MotionVotingOrganisation/MotionVotingOrganisation.bin /var/www/html/MotionVotingOrganisation.bin
+	cp bin/contracts/MotionVotingOrganisation/MotionVotingOrganisation.abi /var/www/html/MotionVotingOrganisation.abi
 
 	# Check for Password
 	if [ ! "$password"  ]
