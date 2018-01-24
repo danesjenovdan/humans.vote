@@ -1,7 +1,7 @@
 # Demo script
 
 ## Warning
-You are dealing with a **public** testing chain. Anything you submit to it will be open to read to anyone. Choose your proposals wisely. ;)
+You are dealing with a **public** testing chain. Anything you submit to it will be open for anyone to read. Choose your proposals wisely. ;)
 
 ## Intro
 You're about to test voting on the blockchain. Don't worry, it'll be fine. You need two people to make this work. You will simulate an organisation that has already decided on their voting rules:
