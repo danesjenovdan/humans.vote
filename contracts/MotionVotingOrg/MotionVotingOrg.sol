@@ -36,14 +36,17 @@ contract MotionVotingOrg is PrivateOrg {
         address voter;
     }
 
+    // events
+    event OrganisationNameChanged(string organisationName);
+
     /**
     * Constructor function
     * Needs minimumQuorumForProposals, minutesForDevate, marginOfVotesForMajority
     */
-    function MotionVotingOrg (
-    ) public {
+    function MotionVotingOrg (string _organisationName) public {
         // initialise state
         numberOfMotions = 0;
+        changeOrganisationName(_organisationName);
     }
 
     /**
@@ -58,8 +61,8 @@ contract MotionVotingOrg is PrivateOrg {
     ) public onlyOwner {
         organisationName = newOrganisationName;
 
-        // fire ChangeOfRules event
-        // OrganisationNameChanged(newOrganisationName);
+        // fire OrganisationNameChanged event
+        OrganisationNameChanged(newOrganisationName);
     }
 
     function addBasicMotion(
