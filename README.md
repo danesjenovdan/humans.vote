@@ -1,13 +1,17 @@
 # humans.vote
 Blockchain voting for humans
 
+## What we wanted to do in 48 hours
+
+## What we achieved in 48 hours
+
 ## Design documentation
 [Google Doc with stuff](https://docs.google.com/document/d/1HivUUGqH4lilm60n36SA12tUegNr2g3yyi_9uRWT29I/edit#)
 
 ## Android application
 Download the application from the github repository and install it. After running the application wallet, will be automatically generated for you, and you will be able to execute contract calls after someone gives you ether, or you get it by setting up miner.
 
-## Installation instructions - Debian
+## Installation instructions - Ubuntu
 ### User (voter)
 #### Miner
 The purpose of user becoming a miner is to ensure that transactions are validated by multiple nodes, so the certainty of the system is increased. 
