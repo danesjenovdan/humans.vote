@@ -51,7 +51,7 @@ export class ModalContractFunctionViewComponent {
   }
 
   dismissTap() {
-    this.viewCtrl.dismiss('closed');
+    this.viewCtrl.dismiss();
   }
 
   dismiss(attr = null) {
@@ -119,7 +119,7 @@ export class ModalContractFunctionViewComponent {
 
     } else {
       loading.dismiss();
-      this.dismiss(contractResult);
+      this.dismiss(contractResult || []);
     }
 
   }
