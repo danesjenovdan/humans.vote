@@ -4,7 +4,6 @@ import "../utils/PrivateOrg.sol";
 
 
 contract MotionVotingOrg is PrivateOrg {
-
     // Contract Variables and events
     string public organisationName;
     Motion[] public motions;
