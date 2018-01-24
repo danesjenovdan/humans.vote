@@ -37,7 +37,7 @@ if [ ! $IP  ]
 fi
 
 # Check for Organization name
-if [ ! $ORGNAME  ]
+if [ ! "$ORGNAME"  ]
   then
     echo "No organization name (-o) provided."
     exit 1
@@ -111,10 +111,10 @@ nohup geth --datadir=eth-data --bootnodes=$enode --mine --minerthreads=1 --rpc -
 
 sleep 10
 
-abi=cat bin/contracts/Organisation/Organisation.abi
-data=cat bin/contracts/Organisation/Organisation.bin
+abi=$(<bin/contracts/Organisation/Organisation.abi)
+data=$(<bin/contracts/Organisation/Organisation.bin)
 
-sed -i 's/OOOO/'$ORGNAME'/g' generateContract.js
+sed -i 's/OOOO/'"$ORGNAME"'/g' generateContract.js
 sed -i 's/QQQQ/'$ADDRESS'/g' generateContract.js
 sed -i 's/AAAA/'$abi'/g' generateContract.js
 sed -i 's/DDDD/'$data'/g' generateContract.js
